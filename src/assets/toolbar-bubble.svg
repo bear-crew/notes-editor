@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="195px" height="115px" viewBox="0 0 195 115" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>bubble-right</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M92.4037421,0 C90.6459521,0 87.6356003,8.37370212 80.8834058,8.37370212 C77.7273208,8.37370212 11.0320084,8.37370212 8.44173399,8.37370212 C6.50399945,8.37370212 4.15656274,9.22835404 2.35487556,11.1651634 C1.07280942,12.5433815 0.287850894,14.2427733 -1.15107923e-12,16.2633388 L-1.15107923e-12,98.5641553 C0.0820743058,100.712885 0.867032827,102.489375 2.35487556,103.893625 C3.8427183,105.297875 5.58161209,106 7.57155692,106 L175.870617,106 C178.576549,105.844178 180.707074,105.142053 182.262191,103.893625 C183.817308,102.645197 184.729911,100.868707 185,98.5641553 L185,16.2633388 C185,14.1231157 184.450386,12.4237239 183.351157,11.1651634 C181.702314,9.27732269 179.144304,8.37370212 176.799462,8.37370212 C176.232076,8.37370212 104.893331,8.37370212 104.340427,8.37370212 C97.77314,8.37370212 94.0402843,0 92.4037421,0 Z" id="path-1"></path>
+        <filter x="-4.3%" y="-4.7%" width="108.6%" height="115.1%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="3" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0.711203231   0 0 0 0 0.711203231   0 0 0 0 0.711203231  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop" transform="translate(-524.000000, -349.000000)">
+            <g id="toolbar" transform="translate(529.000000, 350.000000)">
+                <g id="bubble-right" transform="translate(92.500000, 53.000000) scale(-1, 1) translate(-92.500000, -53.000000) ">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use stroke="#E0E0E0" stroke-width="1" fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
