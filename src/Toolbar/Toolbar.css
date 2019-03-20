@@ -1,0 +1,94 @@
+/* Toolbar */
+.toolbar {
+    background-image: url(../assets/toolbar-bubble.svg);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 196px;
+    height: 116px;
+}
+
+.toolbar-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 74px;
+    margin-right: 10px;
+    margin-top: 20px;
+}
+
+.toolbar-column:first-child {
+    margin-left: 25px;
+}
+
+.toolbar-column:last-child {
+    margin-right: 25px;
+}
+
+.toolbar button {
+    border: none;
+    padding: 0;
+    margin: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: white;
+}
+
+.toolbar button:hover {
+    cursor: pointer;
+}
+
+.toolbar .bold {
+    width: 14px;
+    height: 17px;
+    margin-left: 3px;
+    background-image: url(../assets/buttons/bold.svg);
+}
+
+.toolbar .italic {
+    width: 11px;
+    height: 17px;
+    margin-left: 6px;
+    background-image: url(../assets/buttons/italic.svg);
+}
+
+.toolbar .h2 {
+    width: 22px;
+    height: 14px;
+    margin-left: 3px;
+    background-image: url(../assets/buttons/h2.svg);
+}
+
+.toolbar .h3 {
+    width: 22px;
+    height: 14px;
+    margin-bottom: 5px;
+    margin-left: 2px;
+    background-image: url(../assets/buttons/h3.svg);
+}
+
+.toolbar .ord-list {
+    width: 19px;
+    height: 21px;
+    background-image: url(../assets/buttons/ord-list.svg);
+}
+
+.toolbar .unord-list {
+    width: 19px;
+    height: 22px;
+    background-image: url(../assets/buttons/unord-list.svg);
+}
+
+.toolbar .blockquote {
+    width: 27px;
+    height: 20px;
+    background-image: url(../assets/buttons/blockquote.svg);
+}
+
+.toolbar .link {
+    width: 25px;
+    height: 8px;
+    margin-bottom: 6px;
+    background-image: url(../assets/buttons/link.svg);
+}
+/* Toolbar */
