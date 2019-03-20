@@ -1,4 +1,4 @@
-import { RichUtils /* getVisibleSelectionRect */ } from 'draft-js';
+import { getVisibleSelectionRect, RichUtils } from 'draft-js';
 import * as React from 'react';
 import './Toolbar.css';
 
@@ -39,8 +39,34 @@ class Toolbar extends React.Component<any, any> {
 
     private getStyle = () => {
         const style = {
-            visibility: "hidden"
+            position: 'absolute',
+            visibility: 'hidden'
         } as React.CSSProperties;
+
+        const editorElement = document.getElementsByClassName('DraftEditor-root')[0];
+        if(!editorElement) {
+            return style;
+        }
+
+        const editorRect = editorElement.getBoundingClientRect();
+        const leftOffset = editorRect.left;
+        const topOffset = editorRect.top;
+
+        const selectRect = getVisibleSelectionRect(window);
+        let position;
+        const toolBarWidth = 98;
+        const extraOffset = 5;
+        if(selectRect) {
+            position = {
+                left: selectRect.left - toolBarWidth + selectRect.width/2 - leftOffset,
+                top: selectRect.bottom + extraOffset - topOffset
+            };
+
+            style.left = position.left;
+            style.top = position.top;
+        }
+    
+
         const selection = this.props.editorState.getSelection();
         if( selection.getHasFocus() && !selection.isCollapsed() ) {
             style.visibility = 'visible';
