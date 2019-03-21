@@ -30,7 +30,6 @@ class ReactEditor extends React.Component<any, any> {
     }
 
     private onChange = (editorState: EditorState) => {
-        console.log("editor update");
         this.setState({editorState});
     }
 }

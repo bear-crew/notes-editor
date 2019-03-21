@@ -6,17 +6,30 @@ class Toolbar extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
         this.state = {
-            
+
         };
     }
 
-    public componentDidMount() {
-        console.log("Did update");
+    // public componentDidMount() {
+    //     console.log("Did mount");
+    // }
+
+    public componentDidUpdate() {
+        const toolbarNodes = document.getElementsByClassName('toolbar') as HTMLCollectionOf<HTMLElement>;
+        const style = this.getStyle();
+        toolbarNodes[0].style.top = `${style.top}px`;
+        toolbarNodes[0].style.left = `${style.left}px`;
+        toolbarNodes[0].style.visibility = `${style.visibility}`;
+        console.log(style);
     }
 
-    public render() { 
+    public render() {
+        const style = {
+            position: 'absolute',
+            visibility: 'hidden'
+        } as React.CSSProperties;
         return (
-            <div className="toolbar" key="toolbar" style={this.getStyle()} >
+            <div className="toolbar" key="toolbar" style={style} >
                 <div className="toolbar-column">
                     <button type="button" className='bold' onMouseDown={this.bold} />
                     <button type="button" className='ord-list' onMouseDown={this.ordList} />
@@ -43,7 +56,7 @@ class Toolbar extends React.Component<any, any> {
             visibility: 'hidden'
         } as React.CSSProperties;
 
-        const editorElement = document.getElementsByClassName('DraftEditor-root')[0];
+        const editorElement = document.getElementById('root');
         if(!editorElement) {
             return style;
         }
@@ -51,7 +64,6 @@ class Toolbar extends React.Component<any, any> {
         const editorRect = editorElement.getBoundingClientRect();
         const leftOffset = editorRect.left;
         const topOffset = editorRect.top;
-
         const selectRect = getVisibleSelectionRect(window);
         let position;
         const toolBarWidth = 98;
@@ -65,7 +77,6 @@ class Toolbar extends React.Component<any, any> {
             style.left = position.left;
             style.top = position.top;
         }
-    
 
         const selection = this.props.editorState.getSelection();
         if( selection.getHasFocus() && !selection.isCollapsed() ) {
