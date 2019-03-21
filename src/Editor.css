@@ -1,4 +1,4 @@
-#root {
+.bear-editor {
     position: relative;
     margin-left: 400px;
     margin-top: 200px;
@@ -6,4 +6,10 @@
     border: 1px solid black;
     height: 500px;
     overflow-y: scroll;
+}
+
+.DraftEditor-root {
+    height: calc(100% - 10px);
+    width: calc(100% - 10px);
+    padding: 5px;
 }

@@ -14,19 +14,20 @@ class ReactEditor extends React.Component<any, any> {
 
     public render() {
 
-        return [
-            <Editor
-            key='editor'
-            editorState={this.state.editorState}
-            onChange={this.onChange}
-            />,
-            <Toolbar 
-            key='toolbar'
-            editorState={this.state.editorState}
-            onChange={this.onChange}
-            />
-        ]
-      
+        return (
+            <div className='bear-editor'>
+                <Editor
+                key='editor'
+                editorState={this.state.editorState}
+                onChange={this.onChange}
+                />
+                <Toolbar 
+                key='toolbar'
+                editorState={this.state.editorState}
+                onChange={this.onChange}
+                />
+            </div>
+        )
     }
 
     private onChange = (editorState: EditorState) => {

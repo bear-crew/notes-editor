@@ -8,6 +8,14 @@
     height: 116px;
 }
 
+.right-bubble {
+    background-image: url(../assets/bubble-right-corner.svg);
+}
+
+.left-bubble {
+    background-image: url(../assets/bubble-left-corner.svg);
+}
+
 .toolbar-column {
     display: flex;
     flex-direction: column;

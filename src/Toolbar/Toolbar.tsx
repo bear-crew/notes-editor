@@ -16,16 +16,24 @@ class Toolbar extends React.Component<any, any> {
 
     public componentDidUpdate() {
         const toolbarNodes = document.getElementsByClassName('toolbar') as HTMLCollectionOf<HTMLElement>;
-        const style = this.getStyle();
+        const [style, className] = this.getStyle();
         toolbarNodes[0].style.top = `${style.top}px`;
         toolbarNodes[0].style.left = `${style.left}px`;
         toolbarNodes[0].style.visibility = `${style.visibility}`;
-        console.log(style);
+        if(className === '') {
+            toolbarNodes[0].className = 'toolbar';
+        }
+        else if(className === 'right-bubble') {
+            toolbarNodes[0].className += ' '+className;
+        }
+ 
     }
 
     public render() {
         const style = {
+            left: 0,
             position: 'absolute',
+            top: 0,
             visibility: 'hidden'
         } as React.CSSProperties;
         return (
@@ -50,15 +58,24 @@ class Toolbar extends React.Component<any, any> {
         );
     }    
 
-    private getStyle = () => {
+    private getStyle = (): [React.CSSProperties, string] => {
         const style = {
+            left: 0,
             position: 'absolute',
+            top: 0,
             visibility: 'hidden'
         } as React.CSSProperties;
+        let className = '';
+        const selection = this.props.editorState.getSelection();
 
-        const editorElement = document.getElementById('root');
+        if( !selection.getHasFocus() || selection.isCollapsed() ) {
+            return [style, className];
+        }
+
+        const editorElement = document.getElementsByClassName('DraftEditor-root')[0];
+
         if(!editorElement) {
-            return style;
+            return [style, className];
         }
 
         const editorRect = editorElement.getBoundingClientRect();
@@ -66,26 +83,31 @@ class Toolbar extends React.Component<any, any> {
         const topOffset = editorRect.top;
         const selectRect = getVisibleSelectionRect(window);
         let position;
-        const toolBarWidth = 98;
+        const toolBarWidth = 196; // TODO
         const extraOffset = 5;
         if(selectRect) {
             position = {
-                left: selectRect.left - toolBarWidth + selectRect.width/2 - leftOffset,
+                left: selectRect.left - toolBarWidth/2 + selectRect.width/2 - leftOffset,
                 top: selectRect.bottom + extraOffset - topOffset
             };
-
+            // console.log(position);
+            // console.log(editorRect);
+            // console.log("position.left = ", position.left);
+            // console.log("toolBarWidth = ", toolBarWidth);
+            // console.log("leftOffset = ", leftOffset);
+            // console.log("sum = ", position.left + toolBarWidth + leftOffset);
+            // console.log("editorRect.right = ", editorRect.right);
+            if(position.left + toolBarWidth + leftOffset > editorRect.right) {
+                position.left = (selectRect.right - selectRect.width/2) - (toolBarWidth-5) - leftOffset;
+                className = 'right-bubble';
+            }
             style.left = position.left;
             style.top = position.top;
         }
 
-        const selection = this.props.editorState.getSelection();
-        if( selection.getHasFocus() && !selection.isCollapsed() ) {
-            style.visibility = 'visible';
-        }
-        else {
-            style.visibility = 'hidden';
-        }
-        return style;
+        
+        style.visibility = 'visible';
+        return [style, className];
     }
 
     private bold = (event: React.MouseEvent<HTMLButtonElement>) => {
