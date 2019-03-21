@@ -20,11 +20,15 @@ class Toolbar extends React.Component<any, any> {
         toolbarNodes[0].style.top = `${style.top}px`;
         toolbarNodes[0].style.left = `${style.left}px`;
         toolbarNodes[0].style.visibility = `${style.visibility}`;
+
         if(className === '') {
             toolbarNodes[0].className = 'toolbar';
         }
         else if(className === 'right-bubble') {
-            toolbarNodes[0].className += ' '+className;
+            toolbarNodes[0].className = 'toolbar right-bubble';
+        }
+        else if(className === 'left-bubble') {
+            toolbarNodes[0].className = 'toolbar left-bubble';
         }
  
     }
@@ -90,16 +94,15 @@ class Toolbar extends React.Component<any, any> {
                 left: selectRect.left - toolBarWidth/2 + selectRect.width/2 - leftOffset,
                 top: selectRect.bottom + extraOffset - topOffset
             };
-            // console.log(position);
-            // console.log(editorRect);
-            // console.log("position.left = ", position.left);
-            // console.log("toolBarWidth = ", toolBarWidth);
-            // console.log("leftOffset = ", leftOffset);
-            // console.log("sum = ", position.left + toolBarWidth + leftOffset);
-            // console.log("editorRect.right = ", editorRect.right);
+
             if(position.left + toolBarWidth + leftOffset > editorRect.right) {
                 position.left = (selectRect.right - selectRect.width/2) - (toolBarWidth-5) - leftOffset;
                 className = 'right-bubble';
+            }
+
+            if(position.left < 0) {
+                position.left = (selectRect.left + selectRect.width/2-5) - leftOffset;
+                className = 'left-bubble';
             }
             style.left = position.left;
             style.top = position.top;
