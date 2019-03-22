@@ -6,7 +6,7 @@ class Toolbar extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
         this.state = {
-
+            urlInputIsOpen: false
         };
     }
 
@@ -48,10 +48,10 @@ class Toolbar extends React.Component<any, any> {
             }
             const top = node.getBoundingClientRect().top - editrorRect.top;
             // const top = getVisibleSelectionRect(window).top + editrorRect.top;
-            sidebarNodes[0].style.top = `${top}px`;
+            sidebarNodes[0].style.top = `${top-5}px`;
             sidebarNodes[0].style.visibility = 'visible';
         }
-        else {
+        else if(!this.state.urlInputIsOpen) {
             sidebarNodes[0].style.top = `${0}px`;
             sidebarNodes[0].style.visibility = 'hidden';
         }
@@ -67,10 +67,12 @@ class Toolbar extends React.Component<any, any> {
         } as React.CSSProperties;
 
         const sidebarStyle = {
-            left: 15,
+            left: 30,
             top: 0,
             visibility: 'hidden'
         } as React.CSSProperties;
+
+        const urlInput = this.state.urlInputIsOpen && <input type="url" name="" id="picture-input" />
 
         return [
             <div className="toolbar" key="toolbar" style={toolbarStyle}>
@@ -94,6 +96,7 @@ class Toolbar extends React.Component<any, any> {
 
             <div className="sidebar" key="sidebar" style={sidebarStyle}>
                 <button type="button" className="picture" onMouseDown={this.picture} />
+                {urlInput}
             </div>
         ];
     }
@@ -166,11 +169,16 @@ class Toolbar extends React.Component<any, any> {
         return [style, className];
     }
 
+    // private urlInput = (event: React.MouseEvent<HTMLButtonElement>) => {
+    //     event.preventDefault();
+    //     // this.props.onChange(RichUtils.toggleInlineStyle(this.props.editorState, 'BOLD'));
+    // }
+
     private picture = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
+        this.setState({urlInputIsOpen: !this.state.urlInputIsOpen})
         // this.props.onChange(RichUtils.toggleInlineStyle(this.props.editorState, 'BOLD'));
     }
-
 
     private bold = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
