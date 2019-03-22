@@ -35,18 +35,45 @@ class Toolbar extends React.Component<any, any> {
         else if (className === 'bubble-top-l') {
             toolbarNodes[0].className = 'toolbar bubble-top-l';
         }
+
+        const selection = this.props.editorState.getSelection();
+        const sidebarNodes = document.getElementsByClassName('sidebar') as HTMLCollectionOf<HTMLElement>;
+        if(selection.getHasFocus()) {
+            const editorElement = document.getElementsByClassName('DraftEditor-root')[0];
+            const editrorRect = editorElement.getBoundingClientRect();
+            const select = window.getSelection();
+            let node = select.anchorNode as Element;
+            if (node.nodeValue) {
+                node = node.parentNode as Element;
+            }
+            const top = node.getBoundingClientRect().top - editrorRect.top;
+            // const top = getVisibleSelectionRect(window).top + editrorRect.top;
+            sidebarNodes[0].style.top = `${top}px`;
+            sidebarNodes[0].style.visibility = 'visible';
+        }
+        else {
+            sidebarNodes[0].style.top = `${0}px`;
+            sidebarNodes[0].style.visibility = 'hidden';
+        }
+            
     }
 
     public render() {
-        const style = {
+        const toolbarStyle = {
             left: 0,
             position: 'absolute',
             top: 0,
             visibility: 'hidden'
         } as React.CSSProperties;
 
-        return (
-            <div className="toolbar" key="toolbar" style={style}>
+        const sidebarStyle = {
+            left: 15,
+            top: 0,
+            visibility: 'hidden'
+        } as React.CSSProperties;
+
+        return [
+            <div className="toolbar" key="toolbar" style={toolbarStyle}>
                 <div className="toolbar-column">
                     <button type="button" className='bold' onMouseDown={this.bold} />
                     <button type="button" className='ord-list' onMouseDown={this.ordList} />
@@ -63,8 +90,12 @@ class Toolbar extends React.Component<any, any> {
                     <button type="button" className='h3' onMouseDown={this.h3} />
                     <button type="button" className='link' />
                 </div>
+            </div>,
+
+            <div className="sidebar" key="sidebar" style={sidebarStyle}>
+                <button type="button" className="picture" onMouseDown={this.picture} />
             </div>
-        );
+        ];
     }
 
     private getStyle = (): [React.CSSProperties, string] => {
@@ -134,6 +165,12 @@ class Toolbar extends React.Component<any, any> {
         style.visibility = 'visible';
         return [style, className];
     }
+
+    private picture = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        // this.props.onChange(RichUtils.toggleInlineStyle(this.props.editorState, 'BOLD'));
+    }
+
 
     private bold = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();

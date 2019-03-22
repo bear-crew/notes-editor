@@ -119,3 +119,13 @@
     background-image: url(../assets/buttons/link.svg);
 }
 /* Toolbar */
+
+/* Sidebar */
+.sidebar {
+    display: block;
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    background: red;
+}
+/* Sidebar */
