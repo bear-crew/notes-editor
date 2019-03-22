@@ -1,19 +1,39 @@
 /* Toolbar */
 .toolbar {
-    background-image: url(../assets/toolbar-bubble.svg);
+    background-image: url(../assets/bubbles/bubble-bottom.svg);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 196px;
-    height: 116px;
+    width: 197px;
+    height: 98px;
+    padding-top: 20px;
+    -webkit-user-select: none;
+    -moz-user-select: -moz-none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-.right-bubble {
-    background-image: url(../assets/bubble-right-corner.svg);
+.bubble-bottom-r {
+    background-image: url(../assets/bubbles/bubble-bottom-r.svg);
 }
 
-.left-bubble {
-    background-image: url(../assets/bubble-left-corner.svg);
+.bubble-bottom-l {
+    background-image: url(../assets/bubbles/bubble-bottom-l.svg);
+}
+
+.bubble-top {
+    background-image: url(../assets/bubbles/bubble-top.svg);
+    padding-top: 13px;
+}
+
+.bubble-top-l {
+    background-image: url(../assets/bubbles/bubble-top-l.svg);
+    padding-top: 13px;
+}
+
+.bubble-top-r {
+    background-image: url(../assets/bubbles/bubble-top-r.svg);
+    padding-top: 13px;
 }
 
 .toolbar-column {
@@ -22,7 +42,6 @@
     justify-content: space-around;
     height: 74px;
     margin-right: 10px;
-    margin-top: 20px;
 }
 
 .toolbar-column:first-child {

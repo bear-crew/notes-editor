@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="197px" height="118px" viewBox="0 0 197 118" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>bubble-top</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M790.403742,886 C788.645952,886 785.6356,894.373702 778.883406,894.373702 C775.727321,894.373702 709.032008,894.373702 706.441734,894.373702 C704.503999,894.373702 702.156563,895.228354 700.354876,897.165163 C699.072809,898.543381 698.287851,900.242773 698,902.263339 L698,984.564155 C698.082074,986.712885 698.867033,988.489375 700.354876,989.893625 C701.842718,991.297875 703.581612,992 705.571557,992 L873.870617,992 C876.576549,991.844178 878.707074,991.142053 880.262191,989.893625 C881.817308,988.645197 882.729911,986.868707 883,984.564155 L883,902.263339 C883,900.123116 882.450386,898.423724 881.351157,897.165163 C879.702314,895.277323 877.144304,894.373702 874.799462,894.373702 C874.232076,894.373702 802.893331,894.373702 802.340427,894.373702 C795.77314,894.373702 792.040284,886 790.403742,886 Z" id="path-1"></path>
+        <filter x="-6.2%" y="-14.6%" width="112.4%" height="121.7%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="-4" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0.333333333   0 0 0 0 0.333333333   0 0 0 0 0.333333333  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop" transform="translate(-692.000000, -884.000000)">
+            <g id="bubble-top" transform="translate(790.500000, 939.000000) scale(-1, 1) rotate(-180.000000) translate(-790.500000, -939.000000) ">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use stroke="#E0E0E0" stroke-width="1" fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+        </g>
+    </g>
+</svg>

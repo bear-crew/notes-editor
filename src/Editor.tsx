@@ -3,7 +3,6 @@ import * as React from 'react';
 import './Editor.css';
 import Toolbar from './Toolbar/Toolbar';
 
-
 class ReactEditor extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
@@ -13,7 +12,6 @@ class ReactEditor extends React.Component<any, any> {
     }
 
     public render() {
-
         return (
             <div className='bear-editor'>
                 <Editor

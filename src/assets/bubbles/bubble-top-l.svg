@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="197px" height="116px" viewBox="0 0 197 116" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>bubble-top-l</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M916.941852,1040.41217 C915.528473,1037.78767 916.124973,1037.78767 916.124973,1049.60118 C916.124973,1057.47685 916.124973,1086.72173 916.124973,1137.33582 C916.206533,1139.55053 916.986572,1141.38157 918.46509,1142.82894 C919.943608,1144.27631 921.671603,1145 923.649077,1145 L1091.92783,1145 C1094.61681,1144.83939 1096.73398,1144.11571 1098.27935,1142.82894 C1099.82472,1141.54218 1100.7316,1139.71114 1101,1137.33582 L1101,1055.67739 C1101,1053.47145 1100.45383,1051.71987 1099.36149,1050.42266 C1097.72298,1048.47685 1095.18098,1047.54926 1092.85086,1047.54548 C1036.5865,1047.45434 981.725733,1047.45434 928.268568,1047.54548 C923.229356,1047.45434 919.453784,1045.07657 916.941852,1040.41217 Z" id="path-1"></path>
+        <filter x="-6.2%" y="-13.5%" width="112.4%" height="120.6%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="-4" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0.333333333   0 0 0 0 0.333333333   0 0 0 0 0.333333333  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop" transform="translate(-910.000000, -1037.000000)">
+            <g id="bubble-top-l" transform="translate(1008.500000, 1092.000000) scale(-1, 1) rotate(-180.000000) translate(-1008.500000, -1092.000000) ">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use stroke="#E0E0E0" stroke-width="1" fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+        </g>
+    </g>
+</svg>

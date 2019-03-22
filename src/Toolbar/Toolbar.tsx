@@ -10,10 +10,6 @@ class Toolbar extends React.Component<any, any> {
         };
     }
 
-    // public componentDidMount() {
-    //     console.log("Did mount");
-    // }
-
     public componentDidUpdate() {
         const toolbarNodes = document.getElementsByClassName('toolbar') as HTMLCollectionOf<HTMLElement>;
         const [style, className] = this.getStyle();
@@ -21,16 +17,24 @@ class Toolbar extends React.Component<any, any> {
         toolbarNodes[0].style.left = `${style.left}px`;
         toolbarNodes[0].style.visibility = `${style.visibility}`;
 
-        if(className === '') {
+        if (className === '') {
             toolbarNodes[0].className = 'toolbar';
         }
-        else if(className === 'right-bubble') {
-            toolbarNodes[0].className = 'toolbar right-bubble';
+        else if (className === 'bubble-bottom-r') {
+            toolbarNodes[0].className = 'toolbar bubble-bottom-r';
         }
-        else if(className === 'left-bubble') {
-            toolbarNodes[0].className = 'toolbar left-bubble';
+        else if (className === 'bubble-bottom-l') {
+            toolbarNodes[0].className = 'toolbar bubble-bottom-l';
         }
- 
+        else if (className === 'bubble-top') {
+            toolbarNodes[0].className = 'toolbar bubble-top';
+        }
+        else if (className === 'bubble-top-r') {
+            toolbarNodes[0].className = 'toolbar bubble-top-r';
+        }
+        else if (className === 'bubble-top-l') {
+            toolbarNodes[0].className = 'toolbar bubble-top-l';
+        }
     }
 
     public render() {
@@ -40,8 +44,9 @@ class Toolbar extends React.Component<any, any> {
             top: 0,
             visibility: 'hidden'
         } as React.CSSProperties;
+
         return (
-            <div className="toolbar" key="toolbar" style={style} >
+            <div className="toolbar" key="toolbar" style={style}>
                 <div className="toolbar-column">
                     <button type="button" className='bold' onMouseDown={this.bold} />
                     <button type="button" className='ord-list' onMouseDown={this.ordList} />
@@ -60,7 +65,7 @@ class Toolbar extends React.Component<any, any> {
                 </div>
             </div>
         );
-    }    
+    }
 
     private getStyle = (): [React.CSSProperties, string] => {
         const style = {
@@ -83,26 +88,43 @@ class Toolbar extends React.Component<any, any> {
         }
 
         const editorRect = editorElement.getBoundingClientRect();
-        const leftOffset = editorRect.left;
-        const topOffset = editorRect.top;
         const selectRect = getVisibleSelectionRect(window);
         let position;
-        const toolBarWidth = 196; // TODO
+        const toolBarWidth = 197; // TODO: change to dynamic width
+        const toolBarHeight = 118;
         const extraOffset = 5;
-        if(selectRect) {
+
+        if (selectRect) {
             position = {
-                left: selectRect.left - toolBarWidth/2 + selectRect.width/2 - leftOffset,
-                top: selectRect.bottom + extraOffset - topOffset
+                left: selectRect.left - toolBarWidth/2 + selectRect.width/2 - editorRect.left,
+                top: selectRect.bottom + extraOffset - editorRect.top
             };
 
-            if(position.left + toolBarWidth + leftOffset > editorRect.right) {
-                position.left = (selectRect.right - selectRect.width/2) - (toolBarWidth-5) - leftOffset;
-                className = 'right-bubble';
-            }
-
-            if(position.left < 0) {
-                position.left = (selectRect.left + selectRect.width/2-5) - leftOffset;
-                className = 'left-bubble';
+            if (position.left + toolBarWidth + editorRect.left > editorRect.right) { // toolbar moves right too much
+                if (editorRect.top + position.top + toolBarHeight > editorRect.bottom) { // right and down
+                    position.top = selectRect.top - toolBarHeight - editorRect.top;
+                    className = 'bubble-top-r';
+                }
+                else {
+                    className = 'bubble-bottom-r';
+                }
+                position.left = (selectRect.right - selectRect.width/2) - (toolBarWidth - 5) - editorRect.left;
+            } 
+            
+            else if (position.left < 0) { // toolbar moves left too much
+                if (editorRect.top + position.top + toolBarHeight > editorRect.bottom) { // left and down
+                    position.top = selectRect.top - toolBarHeight - editorRect.top;
+                    className = 'bubble-top-l';
+                }
+                else {
+                    className = 'bubble-bottom-l';
+                }
+                position.left = (selectRect.left + selectRect.width/2 - 5) - editorRect.left;
+            } 
+            
+            else if (editorRect.top + position.top + toolBarHeight > editorRect.bottom) { // toolbar moves down too much
+                position.top = selectRect.top - toolBarHeight - editorRect.top;
+                className = 'bubble-top';
             }
             style.left = position.left;
             style.top = position.top;
