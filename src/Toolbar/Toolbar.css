@@ -150,3 +150,19 @@
     height: 25px;
 }
 /* Sidebar */
+
+/* Link input */
+.link-input {
+    background-image: url(../assets/bubbles/link-bottom.svg);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 255px;
+    height: 55px;
+    padding-top: 20px;
+    -webkit-user-select: none;
+    -moz-user-select: -moz-none;
+    -ms-user-select: none;
+    user-select: none;
+}
+/* Link input */
