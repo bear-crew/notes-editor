@@ -101,22 +101,32 @@ class Toolbar extends React.Component<any, any> {
     private getSidebarPosition = () => {
         let style = {} as React.CSSProperties
         const selection = this.props.editorState.getSelection();
-        if(selection.getHasFocus()) {
+        const str = '[data-offset-key="'+`${selection.anchorKey}`+'-0-0"]';
+        const nodes = document.querySelectorAll(str);
+        const input = document.getElementById('picture-input');
+        console.log(input);
+        console.log(document.activeElement);
+        if(selection.getHasFocus() || (input === document.activeElement)) {
             const editorElement = document.getElementsByClassName('DraftEditor-root')[0];
             const editrorRect = editorElement.getBoundingClientRect();
-            const select = window.getSelection();
-            let node = select.anchorNode as Element;
-            if (node.nodeValue) {
-                node = node.parentNode as Element;
-            }
-            const top = node.getBoundingClientRect().top - editrorRect.top;
+            // const select = window.getSelection();
+            // let node = select.anchorNode as Element;
+            // if (node.nodeValue) {
+            //     node = node.parentNode as Element;
+            // }
+            const node = nodes[2] as Element;
+            // console.log(node);
+            let y = node.getBoundingClientRect().top - editrorRect.top;
+            if(nodes[0].nodeName === 'H2' || nodes[0].nodeName === 'h3') {
+                y+=5;
+            } 
             style = {
-                top: top-5,
+                top: y-5,
                 visibility: 'visible'
             } 
             return style;
         }
-        else if(!this.state.urlInputIsOpen){
+        else {
             style = {
                 top: 0,
                 visibility: 'hidden'
@@ -124,10 +134,6 @@ class Toolbar extends React.Component<any, any> {
             return style;
         }
 
-        return style = {
-            top: 0,
-            visibility: 'visible'
-        }
     }
 
     private getStyle = (key: string, height: number, width: number): [React.CSSProperties, string] => {
