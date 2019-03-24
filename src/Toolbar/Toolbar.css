@@ -4,8 +4,8 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 197px;
-    height: 98px;
+    width: 193px;
+    height: 95px;
     padding-top: 20px;
     -webkit-user-select: none;
     -moz-user-select: -moz-none;
@@ -23,16 +23,19 @@
 
 .bubble-top {
     background-image: url(../assets/bubbles/bubble-top.svg);
+    height: 100px;
     padding-top: 13px;
 }
 
 .bubble-top-l {
     background-image: url(../assets/bubbles/bubble-top-l.svg);
+    height: 100px;
     padding-top: 13px;
 }
 
 .bubble-top-r {
     background-image: url(../assets/bubbles/bubble-top-r.svg);
+    height: 100px;
     padding-top: 13px;
 }
 

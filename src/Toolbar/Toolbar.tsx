@@ -13,7 +13,7 @@ class Toolbar extends React.Component<any, any> {
 
     public componentDidUpdate() {
         const toolbarNodes = document.getElementsByClassName('toolbar') as HTMLCollectionOf<HTMLElement>;
-        const [style, className] = this.getStyle('bubble', 118, 197);
+        const [style, className] = this.getStyle('bubble', 115, 193);
         toolbarNodes[0].style.top = `${style.top}px`;
         toolbarNodes[0].style.left = `${style.left}px`;
         toolbarNodes[0].style.visibility = `${style.visibility}`;
@@ -150,6 +150,7 @@ class Toolbar extends React.Component<any, any> {
         const selectRect = getVisibleSelectionRect(window);
         let position;
         const extraOffset = 5;
+        const horizontalOffset = 26;
 
         if (selectRect) {
             position = {
@@ -165,7 +166,7 @@ class Toolbar extends React.Component<any, any> {
                 else {
                     className = key+'-bottom-r';
                 }
-                position.left = (selectRect.right - selectRect.width/2) - (width - 5) - editorRect.left;
+                position.left = (selectRect.right - selectRect.width/2) - (width - horizontalOffset) - editorRect.left;
             } 
             
             else if (position.left < 0) { // toolbar moves left too much
@@ -176,7 +177,7 @@ class Toolbar extends React.Component<any, any> {
                 else {
                     className = key+'-bottom-l';
                 }
-                position.left = (selectRect.left + selectRect.width/2 - 5) - editorRect.left;
+                position.left = (selectRect.left + selectRect.width/2 - horizontalOffset) - editorRect.left;
             } 
             
             else if (editorRect.top + position.top + height > editorRect.bottom) { // toolbar moves down too much
