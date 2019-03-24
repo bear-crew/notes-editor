@@ -101,27 +101,18 @@ class Toolbar extends React.Component<any, any> {
     private getSidebarPosition = () => {
         let style = {} as React.CSSProperties
         const selection = this.props.editorState.getSelection();
-        const str = '[data-offset-key="'+`${selection.anchorKey}`+'-0-0"]';
-        const nodes = document.querySelectorAll(str);
-        const input = document.getElementById('picture-input');
-        console.log(input);
-        console.log(document.activeElement);
-        if(selection.getHasFocus() || (input === document.activeElement)) {
+        const nodes = document.querySelectorAll(`[data-offset-key="${selection.anchorKey}-0-0"]`);
+
+        if (selection.getHasFocus()) {
             const editorElement = document.getElementsByClassName('DraftEditor-root')[0];
             const editrorRect = editorElement.getBoundingClientRect();
-            // const select = window.getSelection();
-            // let node = select.anchorNode as Element;
-            // if (node.nodeValue) {
-            //     node = node.parentNode as Element;
-            // }
             const node = nodes[2] as Element;
-            // console.log(node);
             let y = node.getBoundingClientRect().top - editrorRect.top;
-            if(nodes[0].nodeName === 'H2' || nodes[0].nodeName === 'h3') {
-                y+=5;
+            if (nodes[0].nodeName === 'H2' || nodes[0].nodeName === 'H3') {
+                y += 5;
             } 
             style = {
-                top: y-5,
+                top: y - 5,
                 visibility: 'visible'
             } 
             return style;
@@ -133,7 +124,6 @@ class Toolbar extends React.Component<any, any> {
             }
             return style;
         }
-
     }
 
     private getStyle = (key: string, height: number, width: number): [React.CSSProperties, string] => {
@@ -146,13 +136,13 @@ class Toolbar extends React.Component<any, any> {
         let className = '';
         const selection = this.props.editorState.getSelection();
 
-        if( !selection.getHasFocus() || selection.isCollapsed() ) {
+        if (!selection.getHasFocus() || selection.isCollapsed()) {
             return [style, className];
         }
 
         const editorElement = document.getElementsByClassName('DraftEditor-root')[0];
 
-        if(!editorElement) {
+        if (!editorElement) {
             return [style, className];
         }
 
