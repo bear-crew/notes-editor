@@ -15,9 +15,17 @@
     padding: 75px 83px 75px 83px;
 }
 
+/* TEMPORARY */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
 #root {
-    margin-left: 400px;
-    margin-top: 200px;
-    width: 716px;
+    width: 500px;
     height: 500px;
 }
+/* TEMPORARY */
