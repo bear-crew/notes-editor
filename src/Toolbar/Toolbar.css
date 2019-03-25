@@ -151,21 +151,73 @@
     display: block;
     width: 300px;
     height: 25px;
+    position: absolute;
 }
 /* Sidebar */
 
 /* Link input */
-.link-input {
-    background-image: url(../assets/bubbles/link-bottom.svg);
+.link-input-wrapper {
+    background-image: url(../assets/links/link-bubble-bottom.svg);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 255px;
-    height: 55px;
-    padding-top: 20px;
+    align-items: center;
+    width: 217px;
+    height: 63px;
+    padding: 0 23px;
     -webkit-user-select: none;
     -moz-user-select: -moz-none;
     -ms-user-select: none;
     user-select: none;
+    position: relative;
+}
+
+.link-bubble-bottom-l {
+    background-image: url(../assets/links/link-bubble-bottom-l.svg);
+}
+
+.link-bubble-bottom-r {
+    background-image: url(../assets/links/link-bubble-bottom-r.svg);
+}
+
+.link-bubble-top {
+    background-image: url(../assets/links/link-bubble-top.svg);
+}
+
+.link-bubble-top-l {
+    background-image: url(../assets/links/link-bubble-top-l.svg);
+}
+
+.link-bubble-top-r {
+    background-image: url(../assets/links/link-bubble-top-r.svg);
+}
+
+.link-input {
+    width: 170px;
+    height: 23px;
+    border: none;
+}
+
+.gradient {
+    top: 20px;
+    right: 68px;
+    content: "";
+    background: -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%); 
+    background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); 
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); 
+    width: 35px;
+    height: 23px;
+    position: absolute;
+}
+
+.post-link {
+    width: 25px;
+    height: 8px;
+    border: none;
+    padding: 0;
+    margin: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url(../assets/buttons/link.svg);
 }
 /* Link input */

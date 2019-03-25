@@ -10,10 +10,12 @@ class Toolbar extends React.Component<any, any> {
             pictureInputIsOpen: prevState.pictureInputIsOpen,
             prevSelection: prevState.prevSelection,
             sidebarIsOpen: false,
-            test: 5,
             toolbarIsOpen: false,
-            visibleSelection: null,
+            visibleSelection: prevState.visibleSelection,
         };
+        if(( selection !== prevState.prevSelection || selection.isCollapsed()) && prevState.linkInputIsOpen && selection.getHasFocus()) {
+            nextState.linkInputIsOpen = false;
+        }
 
         if (selection.getHasFocus() && !selection.isCollapsed() && !prevState.linkInputIsOpen && !prevState.pictureInputIsOpen) { // open toolbar
             nextState.toolbarIsOpen = true;
@@ -46,62 +48,17 @@ class Toolbar extends React.Component<any, any> {
 
     public componentDidUpdate() { // TODO: disassembly to functions 
         if (this.state.toolbarIsOpen) { // don't open toolbar when link input is open
-            const toolbarNodes = document.getElementsByClassName('toolbar') as HTMLCollectionOf<HTMLElement>;
-            const [style, className] = this.getStyle('bubble', 115, 193, getVisibleSelectionRect(window));
-            toolbarNodes[0].style.top = `${style.top}px`;
-            toolbarNodes[0].style.left = `${style.left}px`;
-
-            if (className === '') {
-                toolbarNodes[0].className = 'toolbar';
-            }
-            else if (className === 'bubble-bottom-r') {
-                toolbarNodes[0].className = 'toolbar bubble-bottom-r';
-            }
-            else if (className === 'bubble-bottom-l') {
-                toolbarNodes[0].className = 'toolbar bubble-bottom-l';
-            }
-            else if (className === 'bubble-top') {
-                toolbarNodes[0].className = 'toolbar bubble-top';
-            }
-            else if (className === 'bubble-top-r') {
-                toolbarNodes[0].className = 'toolbar bubble-top-r';
-            }
-            else if (className === 'bubble-top-l') {
-                toolbarNodes[0].className = 'toolbar bubble-top-l';
-            }
+            this.setToolbarPosition();
         }
 
         if (this.state.linkInputIsOpen) {
-            const linkInputNodes = document.getElementsByClassName('link-input') as HTMLCollectionOf<HTMLElement>;
-            const [style, className] = this.getStyle('link-bubble', 55, 255, this.state.visibleSelection);
-            linkInputNodes[0].style.top = `${style.top}px`;
-            linkInputNodes[0].style.left = `${style.left}px`;
-    
-            if (className === '') {
-                linkInputNodes[0].className = 'link-input';
-            }
-            else if (className === 'link-bubble-bottom-r') {
-                linkInputNodes[0].className = 'link-input link-bubble-bottom-r';
-            }
-            else if (className === 'link-bubble-bottom-l') {
-                linkInputNodes[0].className = 'link-input link-bubble-bottom-l';
-            }
-            else if (className === 'link-bubble-top') {
-                linkInputNodes[0].className = 'link-input link-bubble-top';
-            }
-            else if (className === 'link-bubble-top-r') {
-                linkInputNodes[0].className = 'link-input link-bubble-top-r';
-            }
-            else if (className === 'link-bubble-top-l') {
-                linkInputNodes[0].className = 'link-input link-bubble-top-l';
-            }
+            this.setLinkInputPosition();
         }
 
         if (this.state.sidebarIsOpen) {
-            const sidebarStyle = this.getSidebarPosition();
-            const sidebarNodes = document.getElementsByClassName('sidebar') as HTMLCollectionOf<HTMLElement>;
-            sidebarNodes[0].style.top = `${sidebarStyle.top}px`;
+            this.setSidebarPosition();
         }
+
     }
 
     public render() {
@@ -121,9 +78,6 @@ class Toolbar extends React.Component<any, any> {
             position: 'absolute',
             top: 0
         } as React.CSSProperties;
-
-        console.log(this.state.test);
-        console.log('picture', this.state.prevSelection, this.state.pictureInputIsOpen);
 
         return [
             this.state.toolbarIsOpen && <div className="toolbar" key="toolbar" style={toolbarStyle}>
@@ -145,16 +99,93 @@ class Toolbar extends React.Component<any, any> {
                 </div>
             </div>,
             
-            this.state.linkInputIsOpen && <div className="link-input" key="link-input" style={linkInputStyle} >
-                <input type="url" name="" id="link-input" onInput={this.urlInput} />
+            this.state.linkInputIsOpen && <div className="link-input-wrapper" key="link-input" style={linkInputStyle} >
+                <input placeholder="Type your link here..." type="url" className="link-input" name="" id="link-input" onInput={this.urlInput} />
+                <button type='button' className='post-link' />
+                <div className="gradient" />
             </div>,
 
-            this.state.sidebarIsOpen && <div className="sidebar" key="sidebar" style={sidebarStyle}>
+            this.state.sidebarIsOpen && <div className="sidebar" key="sidebar" style={sidebarStyle} id='sidebar'>
                 <button type="button" className="picture" onMouseDown={this.picture} />
             </div>,
 
             this.state.pictureInputIsOpen && <input type="url" name="" key="picture-input" id="picture-input" onInput={this.urlInput} />
         ];
+    }
+
+    private setPictureInput = (sidebar : HTMLElement) => {
+        const pictureInput = document.getElementById('picture-input');
+        if(pictureInput && sidebar && sidebar.style.top) {
+            const top = Number(sidebar.style.top.slice(0,-2))+30; 
+            pictureInput.style.top = `${top}px`;
+            pictureInput.style.left = sidebar.style.left;
+        }
+    }
+
+    private setSidebarPosition = () => {
+        const sidebarStyle = this.getSidebarPosition();
+        const sidebarNode = document.getElementById('sidebar');
+        if(sidebarNode) {
+            if(this.state.pictureInputIsOpen) {
+                this.setPictureInput(sidebarNode);
+            }
+            sidebarNode.style.top = `${sidebarStyle.top}px`;
+        }
+        
+
+
+    }
+
+    private setLinkInputPosition = () => {
+        const linkInputNodes = document.getElementsByClassName('link-input-wrapper') as HTMLCollectionOf<HTMLElement>;
+        const [style, className] = this.getStyle('link-bubble', 55, 255, this.state.visibleSelection);
+        linkInputNodes[0].style.top = `${style.top}px`;
+        linkInputNodes[0].style.left = `${style.left}px`;
+
+        if (className === '') {
+            linkInputNodes[0].className = 'link-input-wrapper';
+        }
+        else if (className === 'link-bubble-bottom-r') {
+            linkInputNodes[0].className = 'link-input-wrapper link-bubble-bottom-r';
+        }
+        else if (className === 'link-bubble-bottom-l') {
+            linkInputNodes[0].className = 'link-input-wrapper link-bubble-bottom-l';
+        }
+        else if (className === 'link-bubble-top') {
+            linkInputNodes[0].className = 'link-input-wrapper link-bubble-top';
+        }
+        else if (className === 'link-bubble-top-r') {
+            linkInputNodes[0].className = 'link-input-wrapper link-bubble-top-r';
+        }
+        else if (className === 'link-bubble-top-l') {
+            linkInputNodes[0].className = 'link-input-wrapper link-bubble-top-l';
+        }
+    } 
+
+    private setToolbarPosition = () => {
+        const toolbarNodes = document.getElementsByClassName('toolbar') as HTMLCollectionOf<HTMLElement>;
+        const [style, className] = this.getStyle('bubble', 115, 193, getVisibleSelectionRect(window));
+        toolbarNodes[0].style.top = `${style.top}px`;
+        toolbarNodes[0].style.left = `${style.left}px`;
+
+        if (className === '') {
+            toolbarNodes[0].className = 'toolbar';
+        }
+        else if (className === 'bubble-bottom-r') {
+            toolbarNodes[0].className = 'toolbar bubble-bottom-r';
+        }
+        else if (className === 'bubble-bottom-l') {
+            toolbarNodes[0].className = 'toolbar bubble-bottom-l';
+        }
+        else if (className === 'bubble-top') {
+            toolbarNodes[0].className = 'toolbar bubble-top';
+        }
+        else if (className === 'bubble-top-r') {
+            toolbarNodes[0].className = 'toolbar bubble-top-r';
+        }
+        else if (className === 'bubble-top-l') {
+            toolbarNodes[0].className = 'toolbar bubble-top-l';
+        }
     }
 
     private getSidebarPosition = () => {
@@ -169,7 +200,6 @@ class Toolbar extends React.Component<any, any> {
         }
         
         const nodes = document.querySelectorAll(`[data-offset-key="${selection.anchorKey}-0-0"]`);
-
         if (selection.getHasFocus()) {
             const editorElement = document.getElementsByClassName('DraftEditor-root')[0];
             const editrorRect = editorElement.getBoundingClientRect();
@@ -210,8 +240,6 @@ class Toolbar extends React.Component<any, any> {
         let position;
         const extraOffset = 5;
         const horizontalOffset = 26;
-
-        console.log('rect = ', selectRect);
 
         if (selectRect) {
             position = {
@@ -290,7 +318,7 @@ class Toolbar extends React.Component<any, any> {
         const temp = getVisibleSelectionRect(window);
         this.setState({
             linkInputIsOpen: true,
-            test: 10,
+            prevSelection: this.props.editorState.getSelection(),
             toolbarIsOpen: false,
             visibleSelection: temp
         });
