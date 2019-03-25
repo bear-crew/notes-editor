@@ -6,35 +6,50 @@ class Toolbar extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
         this.state = {
-            prevSelection: {},
-            urlInputIsOpen: false
+            linkInputIsOpen: false,
+            pictureInputIsOpen: false,
+            prevSelection: {}
         };
     }
 
-    public componentDidUpdate() {
+    public componentDidUpdate() { // TODO: disassembly to functions 
         const toolbarNodes = document.getElementsByClassName('toolbar') as HTMLCollectionOf<HTMLElement>;
-        const [style, className] = this.getStyle('bubble', 115, 193);
-        toolbarNodes[0].style.top = `${style.top}px`;
-        toolbarNodes[0].style.left = `${style.left}px`;
-        toolbarNodes[0].style.visibility = `${style.visibility}`;
+        
+        // console.log(this.state.linkInputIsOpen);
+        if (this.state.linkInputIsOpen) { // don't open toolbar when link input is open
+            toolbarNodes[0].style.visibility = 'hidden';
+            // console.log("eat ass");
+        }
+        else {
+            const [style, className] = this.getStyle('bubble', 115, 193);
+            toolbarNodes[0].style.top = `${style.top}px`;
+            toolbarNodes[0].style.left = `${style.left}px`;
+            toolbarNodes[0].style.visibility = `${style.visibility}`;
 
-        if (className === '') {
-            toolbarNodes[0].className = 'toolbar';
+            if (className === '') {
+                toolbarNodes[0].className = 'toolbar';
+            }
+            else if (className === 'bubble-bottom-r') {
+                toolbarNodes[0].className = 'toolbar bubble-bottom-r';
+            }
+            else if (className === 'bubble-bottom-l') {
+                toolbarNodes[0].className = 'toolbar bubble-bottom-l';
+            }
+            else if (className === 'bubble-top') {
+                toolbarNodes[0].className = 'toolbar bubble-top';
+            }
+            else if (className === 'bubble-top-r') {
+                toolbarNodes[0].className = 'toolbar bubble-top-r';
+            }
+            else if (className === 'bubble-top-l') {
+                toolbarNodes[0].className = 'toolbar bubble-top-l';
+            }
         }
-        else if (className === 'bubble-bottom-r') {
-            toolbarNodes[0].className = 'toolbar bubble-bottom-r';
-        }
-        else if (className === 'bubble-bottom-l') {
-            toolbarNodes[0].className = 'toolbar bubble-bottom-l';
-        }
-        else if (className === 'bubble-top') {
-            toolbarNodes[0].className = 'toolbar bubble-top';
-        }
-        else if (className === 'bubble-top-r') {
-            toolbarNodes[0].className = 'toolbar bubble-top-r';
-        }
-        else if (className === 'bubble-top-l') {
-            toolbarNodes[0].className = 'toolbar bubble-top-l';
+
+        console.log(this.state.linkInputIsOpen, !this.props.editorState.getSelection().isCollapsed());
+        
+        if (false) { // if user changed selection when link input is open -> close link input
+            this.setState({linkInputIsOpen: false});
         }
 
         const sidebarStyle = this.getSidebarPosition();
@@ -65,7 +80,7 @@ class Toolbar extends React.Component<any, any> {
         } as React.CSSProperties;
 
 
-        const urlInput = this.state.urlInputIsOpen && <input type="url" name="" id="picture-input" onInput={this.urlInput} />
+        const urlInput = this.state.pictureInputIsOpen && <input type="url" name="" id="picture-input" onInput={this.urlInput} />
 
         return [
             <div className="toolbar" key="toolbar" style={toolbarStyle}>
@@ -187,7 +202,6 @@ class Toolbar extends React.Component<any, any> {
             style.left = position.left;
             style.top = position.top;
         }
-
         
         style.visibility = 'visible';
         return [style, className];
@@ -201,7 +215,7 @@ class Toolbar extends React.Component<any, any> {
     private picture = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         this.setState({prevSelection: this.props.editorState.getSelection()});
-        this.setState({urlInputIsOpen: !this.state.urlInputIsOpen});
+        this.setState({pictureInputIsOpen: !this.state.pictureInputIsOpen});
         // this.props.onChange(RichUtils.toggleInlineStyle(this.props.editorState, 'BOLD'));
     }
 
@@ -222,8 +236,11 @@ class Toolbar extends React.Component<any, any> {
 
     private link = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
+        this.setState({linkInputIsOpen: true});
+
         const toolbarNodes = document.getElementsByClassName('toolbar') as HTMLCollectionOf<HTMLElement>;
-        toolbarNodes[0].style.visibility='hidden';
+        toolbarNodes[0].style.visibility = 'hidden';
+
         const linkInputNodes = document.getElementsByClassName('link-input') as HTMLCollectionOf<HTMLElement>;
         const [style, className] = this.getStyle('link-bubble', 55, 255);
         linkInputNodes[0].style.top = `${style.top}px`;
