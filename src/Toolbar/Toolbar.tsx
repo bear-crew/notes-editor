@@ -125,10 +125,14 @@ class Toolbar extends React.Component<any, any> {
 
     private setPictureInput = (sidebar: HTMLElement) => {
         const pictureInput = document.getElementsByClassName('picture-input-wrapper')[0] as HTMLElement;
-        const cornerOffset = 12;
+        const cornerOffset = {
+            left: 12, // to adjust corner in right position
+            top: 54 // height of bubble + 10
+        };
+
         if (pictureInput && sidebar && sidebar.style.top && sidebar.style.left) {
-            const top = Number(sidebar.style.top.slice(0, -2)) + 54;
-            const left = Number(sidebar.style.left.slice(0, -2)) - cornerOffset;
+            const top = Number(sidebar.style.top.slice(0, -2)) + cornerOffset.top;
+            const left = Number(sidebar.style.left.slice(0, -2)) - cornerOffset.left;
             pictureInput.style.top = `${top}px`;
             pictureInput.style.left = `${left}px`;
         }
