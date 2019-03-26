@@ -132,7 +132,7 @@ class Toolbar extends React.Component<any, any> {
             const contentStateWithEntity = contentState.createEntity(
                 'image',
                 'IMMUTABLE',
-                { src: linkUrl },
+                { src:linkUrl, height: 300, width: 300, },
             );
             const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
             const newEditorState = EditorState.set(
@@ -237,9 +237,14 @@ class Toolbar extends React.Component<any, any> {
         if (selection.getHasFocus()) {
             const editorElement = document.getElementsByClassName('DraftEditor-root')[0];
             const editrorRect = editorElement.getBoundingClientRect();
-            const node = nodes[2] as Element;
+            const parentNode = nodes[0] as Element;
+            let childNode = parentNode.firstChild as Element;
+            console.log(childNode); 
+            if(childNode && childNode.firstChild) {
+                childNode = childNode.firstChild as Element;
+            }
             const buttonOffset = 5;
-            let y = node.getBoundingClientRect().top - editrorRect.top - buttonOffset;
+            let y = childNode.getBoundingClientRect().top - editrorRect.top - buttonOffset;
             if (nodes[0].nodeName === 'H2' || nodes[0].nodeName === 'H3') {
                 y += 5;
             } 
