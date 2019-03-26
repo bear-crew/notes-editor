@@ -1,4 +1,4 @@
-import { EditorState, getVisibleSelectionRect, RichUtils } from 'draft-js';
+import { AtomicBlockUtils, EditorState, getVisibleSelectionRect, RichUtils } from 'draft-js';
 import * as React from 'react';
 import './Toolbar.css';
 
@@ -18,7 +18,7 @@ class Toolbar extends React.Component<any, any> {
             nextState.linkInputIsOpen = false;
         }
 
-        if (selection.getHasFocus() && !selection.isCollapsed() && !prevState.linkInputIsOpen && !prevState.pictureInputIsOpen) { // open toolbar
+        if (selection.getHasFocus() && !selection.isCollapsed() && !nextState.linkInputIsOpen && !prevState.pictureInputIsOpen) { // open toolbar
             nextState.toolbarIsOpen = true;
         } 
         else {
@@ -39,6 +39,7 @@ class Toolbar extends React.Component<any, any> {
         super(props);
         this.state = {
             linkInputIsOpen: false,
+            pictureInput: null,
             pictureInputIsOpen: false,
             prevSelection: {},
             sidebarIsOpen: false,
@@ -106,7 +107,7 @@ class Toolbar extends React.Component<any, any> {
             </div>,
             
             this.state.linkInputIsOpen && <div className="link-input-wrapper" key="link-input" style={linkInputStyle} >
-                <input placeholder="Type your link here..." type="url" className="link-input" name="" id="link-input" onInput={this.urlInput} />
+                <input placeholder="Type your link here..." type="url" className="link-input" name="" id="link-input" onInput={this.urlLink} />
                 <button type='button' className='post-link' />
                 <div className="gradient" />
             </div>,
@@ -116,12 +117,32 @@ class Toolbar extends React.Component<any, any> {
             </div>,
 
             this.state.pictureInputIsOpen && <div className="picture-input-wrapper" key="picture-input" style={pictureInputStyle}>
-                <input type="url" name="" className="picture-input" onInput={this.urlInput} />
-                <button type='button' className='picture-accept' />
+                <input type="url" name="" className="picture-input" onInput={this.urlPicture} />
+                <button type='button' onClick={this.insertImage} className='picture-accept' />
                 <div className="gradient move-right" />
             </div>
         ];
     }
+
+    private insertImage = () => {
+        const linkUrl = this.state.pictureInput;
+        console.log(linkUrl);
+        if (linkUrl) {
+            const contentState = this.props.editorState.getCurrentContent();
+            const contentStateWithEntity = contentState.createEntity(
+                'image',
+                'IMMUTABLE',
+                { src: linkUrl },
+            );
+            const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+            const newEditorState = EditorState.set(
+                this.props.editorState,
+                { currentContent: contentStateWithEntity },
+            );
+    
+            this.props.onChange(AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, ' '));
+        }
+    };
 
     private setPictureInput = (sidebar: HTMLElement) => {
         const pictureInput = document.getElementsByClassName('picture-input-wrapper')[0] as HTMLElement;
@@ -151,7 +172,7 @@ class Toolbar extends React.Component<any, any> {
 
     private setLinkInputPosition = () => {
         const linkInputNodes = document.getElementsByClassName('link-input-wrapper') as HTMLCollectionOf<HTMLElement>;
-        const [style, className] = this.getStyle('link-bubble', 55, 255, this.state.visibleSelection);
+        const [style, className] = this.getStyle('link-bubble', 63, 263, this.state.visibleSelection);
         linkInputNodes[0].style.top = `${style.top}px`;
         linkInputNodes[0].style.left = `${style.left}px`;
 
@@ -293,7 +314,11 @@ class Toolbar extends React.Component<any, any> {
         return [style, className];
     }
 
-    private urlInput = (event: React.FormEvent<HTMLInputElement>) => {
+    private urlPicture = (event: React.FormEvent<HTMLInputElement>) => {
+        this.setState({pictureInput: event.currentTarget.value});
+    }
+
+    private urlLink = (event: React.FormEvent<HTMLInputElement>) => {
         event.preventDefault();
     }
 
