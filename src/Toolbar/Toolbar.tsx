@@ -11,9 +11,10 @@ class Toolbar extends React.Component<any, any> {
             prevSelection: prevState.prevSelection,
             sidebarIsOpen: false,
             toolbarIsOpen: false,
-            visibleSelection: prevState.visibleSelection,
+            visibleSelection: prevState.visibleSelection
         };
-        if(( selection !== prevState.prevSelection || selection.isCollapsed()) && prevState.linkInputIsOpen && selection.getHasFocus()) {
+
+        if ((selection !== prevState.prevSelection || selection.isCollapsed()) && prevState.linkInputIsOpen && selection.getHasFocus()) {
             nextState.linkInputIsOpen = false;
         }
 
@@ -58,7 +59,6 @@ class Toolbar extends React.Component<any, any> {
         if (this.state.sidebarIsOpen) {
             this.setSidebarPosition();
         }
-
     }
 
     public render() {
@@ -69,11 +69,17 @@ class Toolbar extends React.Component<any, any> {
         } as React.CSSProperties;
 
         const sidebarStyle = {
-            left: 30,
+            left: 20, // left.padding/2 - button.width/2 
             top: 0
         } as React.CSSProperties;
 
         const linkInputStyle = {
+            left: 0,
+            position: 'absolute',
+            top: 0
+        } as React.CSSProperties;
+
+        const pictureInputStyle = {
             left: 0,
             position: 'absolute',
             top: 0
@@ -106,19 +112,25 @@ class Toolbar extends React.Component<any, any> {
             </div>,
 
             this.state.sidebarIsOpen && <div className="sidebar" key="sidebar" style={sidebarStyle} id='sidebar'>
-                <button type="button" className="picture" onMouseDown={this.picture} />
+                <button type="button" className={this.state.pictureInputIsOpen ? "picture picture-pushed" : "picture"} onMouseDown={this.picture} />
             </div>,
 
-            this.state.pictureInputIsOpen && <input type="url" name="" key="picture-input" id="picture-input" onInput={this.urlInput} />
+            this.state.pictureInputIsOpen && <div className="picture-input-wrapper" key="picture-input" style={pictureInputStyle}>
+                <input type="url" name="" className="picture-input" onInput={this.urlInput} />
+                <button type='button' className='picture-accept' />
+                <div className="gradient move-right" />
+            </div>
         ];
     }
 
-    private setPictureInput = (sidebar : HTMLElement) => {
-        const pictureInput = document.getElementById('picture-input');
-        if(pictureInput && sidebar && sidebar.style.top) {
-            const top = Number(sidebar.style.top.slice(0,-2))+30; 
+    private setPictureInput = (sidebar: HTMLElement) => {
+        const pictureInput = document.getElementsByClassName('picture-input-wrapper')[0] as HTMLElement;
+        const cornerOffset = 12;
+        if (pictureInput && sidebar && sidebar.style.top && sidebar.style.left) {
+            const top = Number(sidebar.style.top.slice(0, -2)) + 54;
+            const left = Number(sidebar.style.left.slice(0, -2)) - cornerOffset;
             pictureInput.style.top = `${top}px`;
-            pictureInput.style.left = sidebar.style.left;
+            pictureInput.style.left = `${left}px`;
         }
     }
 
@@ -131,9 +143,6 @@ class Toolbar extends React.Component<any, any> {
             }
             sidebarNode.style.top = `${sidebarStyle.top}px`;
         }
-        
-
-
     }
 
     private setLinkInputPosition = () => {
@@ -204,7 +213,8 @@ class Toolbar extends React.Component<any, any> {
             const editorElement = document.getElementsByClassName('DraftEditor-root')[0];
             const editrorRect = editorElement.getBoundingClientRect();
             const node = nodes[2] as Element;
-            let y = node.getBoundingClientRect().top - editrorRect.top;
+            const buttonOffset = 5;
+            let y = node.getBoundingClientRect().top - editrorRect.top - buttonOffset;
             if (nodes[0].nodeName === 'H2' || nodes[0].nodeName === 'H3') {
                 y += 5;
             } 
@@ -236,7 +246,6 @@ class Toolbar extends React.Component<any, any> {
         }
 
         const editorRect = editorElement.getBoundingClientRect();
-        // const selectRect = getVisibleSelectionRect(window);
         let position;
         const extraOffset = 5;
         const horizontalOffset = 26;
@@ -282,20 +291,17 @@ class Toolbar extends React.Component<any, any> {
 
     private urlInput = (event: React.FormEvent<HTMLInputElement>) => {
         event.preventDefault();
-        // this.props.onChange(RichUtils.toggleInlineStyle(this.props.editorState, 'BOLD'));
     }
 
     private picture = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
 
         if (this.state.pictureInputIsOpen) {
-            // bring back selection
-            this.props.onChange(EditorState.forceSelection(this.props.editorState, this.state.prevSelection));
+            this.props.onChange(EditorState.forceSelection(this.props.editorState, this.state.prevSelection)); // bring back selection
         }
 
         this.setState({prevSelection: this.props.editorState.getSelection()});
         this.setState({pictureInputIsOpen: !this.state.pictureInputIsOpen});
-        // this.props.onChange(RichUtils.toggleInlineStyle(this.props.editorState, 'BOLD'));
     }
 
     private bold = (event: React.MouseEvent<HTMLButtonElement>) => {

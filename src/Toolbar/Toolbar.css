@@ -125,11 +125,12 @@
 
 /* Sidebar */
 .sidebar {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: absolute;
-    width: 25px;
-    height: 25px;
-    background: red;
+    height: 44px;
+    width: 44px;
 }
 
 .picture {
@@ -139,19 +140,63 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     background: none;
-    height: 100%;
-    width: 100%;
+    background-image: url(../assets/buttons/picture-button.svg);
+    height: 44px;
+    width: 44px;
+}
+
+.picture-pushed {
+    background-image: url(../assets/buttons/picture-button-pushed.svg);
+    height: 36px;
+    width: 36px;
 }
 
 .picture:hover {
     cursor: pointer;
 }
 
-#picture-input {
-    display: block;
-    width: 300px;
-    height: 25px;
-    position: absolute;
+.picture-input-wrapper {
+    background-image: url(../assets/pic/picture-link.svg);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 198px;
+    height: 63px;
+    padding: 0 23px;
+}
+
+.picture-input {
+    width: 170px;
+    height: 23px;
+    border: none;
+    font-size: 14px;
+    font-weight: 200;
+    color: rgba(0, 0, 0, 0.72);
+}
+
+.picture-input:focus {
+    outline: none;
+}
+
+.picture-input::placeholder {
+    color: rgba(0, 0, 0, 0.72);
+}
+
+.picture-accept {
+    width: 22px;
+    height: 17px;
+    border: none;
+    padding: 0;
+    margin: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url(../assets/buttons/check.svg);
+    background-color: white;
+}
+
+.picture-accept:hover {
+    cursor: pointer;
 }
 /* Sidebar */
 
@@ -165,11 +210,6 @@
     width: 217px;
     height: 63px;
     padding: 0 23px;
-    -webkit-user-select: none;
-    -moz-user-select: -moz-none;
-    -ms-user-select: none;
-    user-select: none;
-    position: relative;
 }
 
 .link-bubble-bottom-l {
@@ -196,6 +236,17 @@
     width: 170px;
     height: 23px;
     border: none;
+    font-size: 14px;
+    font-weight: 200;
+    color: rgba(0, 0, 0, 0.72);
+}
+
+.link-input:focus {
+    outline: none;
+}
+
+.link-input::placeholder {
+    color: rgba(0, 0, 0, 0.72);
 }
 
 .gradient {
@@ -216,8 +267,18 @@
     border: none;
     padding: 0;
     margin: 0;
+    margin-top: 2px;
     -webkit-appearance: none;
     -moz-appearance: none;
     background-image: url(../assets/buttons/link.svg);
+    background-color: white;
+}
+
+.post-link:hover {
+    cursor: pointer;
 }
 /* Link input */
+
+.move-right {
+    right: 50px;
+}
