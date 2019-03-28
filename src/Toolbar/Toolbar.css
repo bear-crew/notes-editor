@@ -11,6 +11,7 @@
     -moz-user-select: -moz-none;
     -ms-user-select: none;
     user-select: none;
+    z-index: 10;
 }
 
 .bubble-bottom-r {
@@ -222,14 +223,20 @@
 
 .link-bubble-top {
     background-image: url(../assets/links/link-bubble-top.svg);
+    height: 47px;
+    padding-bottom: 16px;
 }
 
 .link-bubble-top-l {
     background-image: url(../assets/links/link-bubble-top-l.svg);
+    height: 47px;
+    padding-bottom: 16px;
 }
 
 .link-bubble-top-r {
     background-image: url(../assets/links/link-bubble-top-r.svg);
+    height: 47px;
+    padding-bottom: 16px;
 }
 
 .link-input {

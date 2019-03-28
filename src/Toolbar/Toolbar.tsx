@@ -17,7 +17,8 @@ class Toolbar extends React.Component<any, any> {
         if ((selection !== prevState.prevSelection || selection.isCollapsed()) && prevState.linkInputIsOpen && selection.getHasFocus()) {
             nextState.linkInputIsOpen = false;
         }
-
+        console.log("hasFocus", selection.getHasFocus());
+        console.log("isCollapsed", selection.isCollapsed());
         if (selection.getHasFocus() && !selection.isCollapsed() && !nextState.linkInputIsOpen && !prevState.pictureInputIsOpen) { // open toolbar
             nextState.toolbarIsOpen = true;
         } 
@@ -48,7 +49,7 @@ class Toolbar extends React.Component<any, any> {
         };
     }
 
-    public componentDidUpdate() { // TODO: disassembly to functions 
+    public componentDidUpdate() {
         if (this.state.toolbarIsOpen) { // don't open toolbar when link input is open
             this.setToolbarPosition();
         }
@@ -70,7 +71,7 @@ class Toolbar extends React.Component<any, any> {
         } as React.CSSProperties;
 
         const sidebarStyle = {
-            left: 20, // left.padding/2 - button.width/2 
+            left: 20, // leftPadding/2 - buttonWidth/2 
             top: 0
         } as React.CSSProperties;
 
@@ -132,7 +133,7 @@ class Toolbar extends React.Component<any, any> {
             const contentStateWithEntity = contentState.createEntity(
                 'image',
                 'IMMUTABLE',
-                { src:linkUrl, height: 300, width: 300, },
+                { src:linkUrl },
             );
             const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
             const newEditorState = EditorState.set(
@@ -222,6 +223,10 @@ class Toolbar extends React.Component<any, any> {
         }
     }
 
+    // private test = () => {
+    //     this.props.editorState.getCurrentInlineStyle();
+    // }
+
     private getSidebarPosition = () => {
         let style = {} as React.CSSProperties;
         let selection;
@@ -238,13 +243,13 @@ class Toolbar extends React.Component<any, any> {
             const editorElement = document.getElementsByClassName('DraftEditor-root')[0];
             const editrorRect = editorElement.getBoundingClientRect();
             const parentNode = nodes[0] as Element;
-            let childNode = parentNode.firstChild as Element;
-            console.log(childNode); 
-            if(childNode && childNode.firstChild) {
-                childNode = childNode.firstChild as Element;
-            }
+            // let childNode = parentNode.firstChild as Element;
+            // console.log(childNode); 
+            // if(childNode && childNode.firstChild) {
+            //     childNode = childNode.firstChild as Element;
+            // }
             const buttonOffset = 5;
-            let y = childNode.getBoundingClientRect().top - editrorRect.top - buttonOffset;
+            let y = parentNode.getBoundingClientRect().top - editrorRect.top - buttonOffset;
             if (nodes[0].nodeName === 'H2' || nodes[0].nodeName === 'H3') {
                 y += 5;
             } 

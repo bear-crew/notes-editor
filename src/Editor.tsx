@@ -17,7 +17,7 @@ class ReactEditor extends React.Component<any, any> {
 
     public render() {
         return (
-            <div className='bear-editor'>
+            <div className='bear-editor' onDragOver={this.preventDragging} onDrag={this.preventDragging} onDragEnter={this.preventDragging} onDragStart={this.preventDragging} onDragLeave={this.preventDragging}>
                 <Editor
                 key='editor'
                 editorState={this.state.editorState}
@@ -35,6 +35,11 @@ class ReactEditor extends React.Component<any, any> {
 
     private onChange = (editorState: EditorState) => {
         this.setState({editorState});
+    }
+
+    private preventDragging = (event: React.DragEvent<HTMLDivElement>) : boolean => {
+        event.preventDefault();
+        return false;
     }
 }
 
