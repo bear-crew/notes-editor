@@ -69,6 +69,7 @@
     cursor: pointer;
 }
 
+/*Buttons*/
 .toolbar .bold {
     width: 14px;
     height: 17px;
@@ -98,13 +99,13 @@
     background-image: url(../assets/buttons/h3.svg);
 }
 
-.toolbar .ord-list {
+.toolbar .ordered-list {
     width: 19px;
     height: 21px;
     background-image: url(../assets/buttons/ord-list.svg);
 }
 
-.toolbar .unord-list {
+.toolbar .unordered-list {
     width: 19px;
     height: 22px;
     background-image: url(../assets/buttons/unord-list.svg);
@@ -122,6 +123,38 @@
     margin-bottom: 6px;
     background-image: url(../assets/buttons/link.svg);
 }
+/*Buttons*/
+
+/*Active buttons*/
+.toolbar .bold-active {
+    background-image: url(../assets/buttons/red-buttons/bold-active.svg);
+}
+
+.toolbar .italic-active {
+    background-image: url(../assets/buttons/red-buttons/italic-active.svg);
+}
+
+.toolbar .h2-active {
+    background-image: url(../assets/buttons/red-buttons/h2-active.svg);
+}
+
+.toolbar .h3-active {
+    background-image: url(../assets/buttons/red-buttons/h3-active.svg);
+}
+
+.toolbar .blockquote-active {
+    background-image: url(../assets/buttons/red-buttons/blockquote-active.svg);
+}
+
+.toolbar .unordered-list-active {
+    background-image: url(../assets/buttons/red-buttons/unordered-list-active.svg);
+}
+
+.toolbar .ordered-list-active {
+    background-image: url(../assets/buttons/red-buttons/ordered-list-active.svg);
+}
+/*Active buttons*/
+
 /* Toolbar */
 
 /* Sidebar */

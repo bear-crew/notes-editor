@@ -17,8 +17,7 @@ class Toolbar extends React.Component<any, any> {
         if ((selection !== prevState.prevSelection || selection.isCollapsed()) && prevState.linkInputIsOpen && selection.getHasFocus()) {
             nextState.linkInputIsOpen = false;
         }
-        console.log("hasFocus", selection.getHasFocus());
-        console.log("isCollapsed", selection.isCollapsed());
+
         if (selection.getHasFocus() && !selection.isCollapsed() && !nextState.linkInputIsOpen && !prevState.pictureInputIsOpen) { // open toolbar
             nextState.toolbarIsOpen = true;
         } 
@@ -39,6 +38,7 @@ class Toolbar extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
         this.state = {
+            linkInput: null,
             linkInputIsOpen: false,
             pictureInput: null,
             pictureInputIsOpen: false,
@@ -64,6 +64,7 @@ class Toolbar extends React.Component<any, any> {
     }
 
     public render() {
+        // console.log(convertToRaw(this.props.editorState.getCurrentContent()));
         const toolbarStyle = {
             left: 0,
             position: 'absolute',
@@ -90,26 +91,26 @@ class Toolbar extends React.Component<any, any> {
         return [
             this.state.toolbarIsOpen && <div className="toolbar" key="toolbar" style={toolbarStyle}>
                 <div className="toolbar-column">
-                    <button type="button" className='bold' onMouseDown={this.bold} />
-                    <button type="button" className='ord-list' onMouseDown={this.ordList} />
+                    <button type="button" className={this.getButtonStyle('bold')} onMouseDown={this.bold} />
+                    <button type="button" className={this.getButtonStyle('ordered-list')} onMouseDown={this.ordList} />
                 </div>
                 <div className="toolbar-column">
-                    <button type="button" className='italic' onMouseDown={this.italic} />
-                    <button type="button" className='unord-list' onMouseDown={this.unordList} />
+                    <button type="button" className={this.getButtonStyle('italic')} onMouseDown={this.italic} />
+                    <button type="button" className={this.getButtonStyle('unordered-list')} onMouseDown={this.unordList} />
                 </div>
                 <div className="toolbar-column">
-                    <button type="button" className='h2' onMouseDown={this.h2} />
-                    <button type="button" className='blockquote' onMouseDown={this.blockquote} />
+                    <button type="button" className={this.getButtonStyle('h2')} onMouseDown={this.h2} />
+                    <button type="button" className={this.getButtonStyle('blockquote')} onMouseDown={this.blockquote} />
                 </div>
                 <div className="toolbar-column">
-                    <button type="button" className='h3' onMouseDown={this.h3} />
+                    <button type="button" className={this.getButtonStyle('h3')} onMouseDown={this.h3} />
                     <button type="button" className='link' onMouseDown={this.link}/>
                 </div>
             </div>,
             
             this.state.linkInputIsOpen && <div className="link-input-wrapper" key="link-input" style={linkInputStyle} >
                 <input placeholder="Type your link here..." type="url" className="link-input" name="" id="link-input" onInput={this.urlLink} />
-                <button type='button' className='post-link' />
+                <button type='button' className='post-link' onClick={this.postLink}/>
                 <div className="gradient" />
             </div>,
 
@@ -125,9 +126,97 @@ class Toolbar extends React.Component<any, any> {
         ];
     }
 
+    private getButtonStyle = (buttonType : string) : string => {
+        const currentInlineStyle = this.props.editorState.getCurrentInlineStyle();
+        const selection = this.props.editorState.getSelection();
+        const currentBlockStyle = this.props.editorState
+        .getCurrentContent()
+        .getBlockForKey(selection.getStartKey())
+        .getType();
+        switch (buttonType) {
+            case 'bold': {
+                if( currentInlineStyle.has('BOLD') ) {
+                    return 'bold bold-active';
+                }
+                else {
+                    return 'bold';
+                } 
+            }
+            case 'italic': {
+                if( currentInlineStyle.has('ITALIC') ) {
+                    return 'italic italic-active';
+                }
+                else {
+                    return 'italic';
+                } 
+            }
+            case 'h2': {
+                if( currentBlockStyle === 'header-two' ) {
+                    return 'h2 h2-active';
+                }
+                else {
+                    return 'h2';
+                }
+            }
+            case 'h3': {
+                if( currentBlockStyle === 'header-three' ) {
+                    return 'h3 h3-active';
+                }
+                else {
+                    return 'h3';
+                }
+            }
+            case 'blockquote': {
+                if( currentBlockStyle === 'blockquote' ) {
+                    return 'blockquote blockquote-active';
+                }
+                else {
+                    return 'blockquote';
+                }
+            }
+            case 'ordered-list': {
+                if( currentBlockStyle === 'ordered-list-item' ) {
+                    return 'ordered-list ordered-list-active';
+                }
+                else {
+                    return 'ordered-list';
+                }
+            }
+            case 'unordered-list': {
+                if( currentBlockStyle === 'unordered-list-item' ) {
+                    return 'unordered-list unordered-list-active';
+                }
+                else {
+                    return 'unordered-list';
+                }
+            }
+            default: return buttonType;
+        }
+
+    }
+
+    private postLink = (e : React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const linkUrl = this.state.linkInput;
+        const editorState = this.props.editorState;
+        const contentState = editorState.getCurrentContent();
+        const contentStateWithEntity = contentState.createEntity(
+            'LINK',
+            'SEGMENTED',
+            {url: linkUrl}
+        );
+        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+        const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
+        this.props.onChange( RichUtils.toggleLink(
+                newEditorState,
+                newEditorState.getSelection(),
+                entityKey
+            )
+        );
+    }
+
     private insertImage = () => {
         const linkUrl = this.state.pictureInput;
-        console.log(linkUrl);
         if (linkUrl) {
             const contentState = this.props.editorState.getCurrentContent();
             const contentStateWithEntity = contentState.createEntity(
@@ -324,12 +413,12 @@ class Toolbar extends React.Component<any, any> {
         return [style, className];
     }
 
-    private urlPicture = (event: React.FormEvent<HTMLInputElement>) => {
-        this.setState({pictureInput: event.currentTarget.value});
+    private urlLink = (event: React.FormEvent<HTMLInputElement>) => {
+        this.setState({linkInput: event.currentTarget.value});
     }
 
-    private urlLink = (event: React.FormEvent<HTMLInputElement>) => {
-        event.preventDefault();
+    private urlPicture = (event: React.FormEvent<HTMLInputElement>) => {
+        this.setState({pictureInput: event.currentTarget.value});
     }
 
     private picture = (event: React.MouseEvent<HTMLButtonElement>) => {
