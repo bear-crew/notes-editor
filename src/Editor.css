@@ -31,18 +31,18 @@
 }
 
 .bear-editor div > .public-DraftStyleDefault-block > span > span {
-    font-size: 15px;
+    font-size: 13pt;
     line-height: 1.8em;
 }
 
 .bear-editor .public-DraftStyleDefault-ol {
-    font-size: 15px;
+    font-size: 13pt;
     line-height: 1.8em;
     padding-inline-start: 18px;
 }
 
 .bear-editor .public-DraftStyleDefault-ul {
-    font-size: 15px;
+    font-size: 13pt;
     line-height: 1.8em;
     padding-inline-start: 18px;
     list-style: none;
@@ -54,6 +54,23 @@
     /* content: "😎"; */
     padding-right: 1em;
     font-weight: 800;
+}
+
+.bear-editor blockquote {
+    padding: 10px 0px;
+    margin-inline-start: 0;
+}
+
+blockquote span > span {
+    font-size: 13pt;
+    color: #474747;
+    font-style: italic;
+    display: block;
+    margin-left: 0;
+    padding-left: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-left: 2px solid #d83e3e;
 }
 
 /* TEMPORARY */

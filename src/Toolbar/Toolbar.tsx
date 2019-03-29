@@ -332,18 +332,13 @@ class Toolbar extends React.Component<any, any> {
             const editorElement = document.getElementsByClassName('DraftEditor-root')[0];
             const editrorRect = editorElement.getBoundingClientRect();
             const parentNode = nodes[0] as Element;
-            // let childNode = parentNode.firstChild as Element;
-            // console.log(childNode); 
-            // if(childNode && childNode.firstChild) {
-            //     childNode = childNode.firstChild as Element;
-            // }
-            const buttonOffset = 5;
-            let y = parentNode.getBoundingClientRect().top - editrorRect.top - buttonOffset;
-            if (nodes[0].nodeName === 'H2' || nodes[0].nodeName === 'H3') {
-                y += 5;
-            } 
+
+            const buttonHeight = 42;
+            const blockHeight = parentNode.getBoundingClientRect().height;
+            console.log(blockHeight);
+            const y = parentNode.getBoundingClientRect().top - editrorRect.top - (buttonHeight - blockHeight)/2;
             style = {
-                top: y - 5
+                top: y
             } 
             return style;
         }
