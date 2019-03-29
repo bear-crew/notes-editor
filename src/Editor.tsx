@@ -1,4 +1,4 @@
-import { CompositeDecorator,ContentBlock, ContentState, EditorState } from 'draft-js';
+import { CompositeDecorator, ContentBlock, ContentState, EditorState } from 'draft-js';
 import createImagePlugin from 'draft-js-image-plugin';
 import Editor from 'draft-js-plugins-editor';
 import * as React from 'react';
@@ -13,6 +13,30 @@ interface ILinkProps {
     children : any
 }
 
+const Link = (props : ILinkProps) => {
+	const {url} = props.contentState.getEntity(props.entityKey).getData();
+	return (
+		<a href={url} className='link'>
+			{props.children}
+		</a>
+	);
+};
+
+function findLinkEntities(contentBlock : ContentBlock, callback : any, contentState : ContentState) {
+    console.log(contentBlock);
+	contentBlock.findEntityRanges(
+		(character) => {
+				const entityKey = character.getEntity();
+				console.log('tets');
+				return (
+					entityKey !== null &&
+					contentState.getEntity(entityKey).getType() === 'LINK'
+				);
+		},
+		callback
+	);
+}
+
 class ReactEditor extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
@@ -20,7 +44,6 @@ class ReactEditor extends React.Component<any, any> {
             {
                 component: Link,
                 strategy: findLinkEntities
-              
             }
         ]);
         this.state = {
@@ -55,28 +78,5 @@ class ReactEditor extends React.Component<any, any> {
         return false;
     }
 }
-
-function findLinkEntities(contentBlock : ContentBlock, callback : any, contentState : ContentState) {
-    console.log("decorator Function");
-    contentBlock.findEntityRanges(
-      (character) => {
-        const entityKey = character.getEntity();
-        return (
-          entityKey !== null &&
-          contentState.getEntity(entityKey).getType() === 'LINK'
-        );
-      },
-      callback
-    );
-  }
-
-const Link = (props : ILinkProps) => {
-    const {url} = props.contentState.getEntity(props.entityKey).getData();
-    return (
-      <a href={url} className='link'>
-        {props.children}
-      </a>
-    );
-  };
 
 export default ReactEditor;
