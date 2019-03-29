@@ -45,15 +45,11 @@
     font-size: 13pt;
     line-height: 1.8em;
     padding-inline-start: 18px;
-    list-style: none;
+    list-style-image: url(./assets/Oval.svg);
 }
 
-.bear-editor .public-DraftStyleDefault-ul li::before {
-    color: #3C92CA;
-    content: "\2022";
-    /* content: "😎"; */
-    padding-right: 1em;
-    font-weight: 800;
+.bear-editor .public-DraftStyleDefault-ul li {
+    padding-inline-start: 10px;
 }
 
 .bear-editor blockquote {
@@ -74,18 +70,6 @@ blockquote span > span {
 }
 
 /* TEMPORARY */
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-}
-
-#root {
-    width: 500px;
-    height: 500px;
-}
 /* TEMPORARY */
 .link {
 

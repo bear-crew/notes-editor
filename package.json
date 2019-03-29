@@ -1,7 +1,7 @@
 {
-  "name": "notes-editor",
-  "version": "0.1.0",
-  "private": true,
+  "name": "bear-editor",
+  "version": "1.0.0",
+  "private": false,
   "dependencies": {
     "@types/draft-js": "^0.10.28",
     "draft-js": "^0.10.5",
