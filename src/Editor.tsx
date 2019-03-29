@@ -6,11 +6,10 @@ import './Editor.css';
 import Toolbar from './Toolbar/Toolbar';
 const imagePlugin = createImagePlugin();
 
-
 interface ILinkProps {
-    contentState : ContentState,
-    entityKey : string,
-    children : any
+	contentState: ContentState,
+	entityKey: string,
+	children: any
 }
 
 const Link = (props : ILinkProps) => {
@@ -38,45 +37,45 @@ function findLinkEntities(contentBlock : ContentBlock, callback : any, contentSt
 }
 
 class ReactEditor extends React.Component<any, any> {
-    constructor(props: any) {
-        super(props);
-        const decorator = new CompositeDecorator([
-            {
-                component: Link,
-                strategy: findLinkEntities
-            }
-        ]);
-        this.state = {
-            editorState: EditorState.createEmpty(decorator)
-        };
-    }
+	constructor(props: any) {
+		super(props);
+		const decorator = new CompositeDecorator([
+			{
+				component: Link,
+				strategy: findLinkEntities
+			},
+		]);
+		this.state = {
+			editorState: EditorState.createEmpty(decorator),
+		};
+	}
 
-    public render() {
-        return (
-            <div className='bear-editor' onDragOver={this.preventDragging} onDrag={this.preventDragging} onDragEnter={this.preventDragging} onDragStart={this.preventDragging} onDragLeave={this.preventDragging}>
-                <Editor
-                key='editor'
-                editorState={this.state.editorState}
-                onChange={this.onChange}
-                plugins={[imagePlugin]}
-                />
-                <Toolbar 
-                key='toolbar'
-                editorState={this.state.editorState}
-                onChange={this.onChange}
-                />
-            </div>
-        )
-    }
+	public render() {
+		return (
+			<div className='bear-editor' onDragOver={this.preventDragging} onDrag={this.preventDragging} onDragEnter={this.preventDragging} onDragStart={this.preventDragging} onDragLeave={this.preventDragging}>
+				<Editor
+					key='editor'
+					editorState={this.state.editorState}
+					onChange={this.onChange}
+					plugins={[imagePlugin]}
+				/>
+				<Toolbar
+					key='toolbar'
+					editorState={this.state.editorState}
+					onChange={this.onChange}
+				/>
+			</div>
+		)
+	}
 
-    private onChange = (editorState: EditorState) => {
-        this.setState({editorState});
-    }
+	private onChange = (editorState: EditorState) => {
+		this.setState({ editorState });
+	}
 
-    private preventDragging = (event: React.DragEvent<HTMLDivElement>) : boolean => {
-        event.preventDefault();
-        return false;
-    }
+	private preventDragging = (event: React.DragEvent<HTMLDivElement>): boolean => {
+		event.preventDefault();
+		return false;
+	}
 }
 
 export default ReactEditor;
