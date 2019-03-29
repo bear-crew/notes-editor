@@ -202,7 +202,7 @@ class Toolbar extends React.Component<any, any> {
         const contentState = editorState.getCurrentContent();
         const contentStateWithEntity = contentState.createEntity(
             'LINK',
-            'SEGMENTED',
+            'MUTABLE',
             {url: linkUrl}
         );
         const entityKey = contentStateWithEntity.getLastCreatedEntityKey();

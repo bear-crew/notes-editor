@@ -29,6 +29,11 @@ body {
     height: 500px;
 }
 /* TEMPORARY */
+.link {
+
+    color: #3b5998;
+    text-decoration: 'underline';
+}
 /* .bear-editor img {
     user-drag: none; 
     user-select: none;
