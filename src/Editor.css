@@ -70,9 +70,20 @@ blockquote span > span {
 }
 
 /* TEMPORARY */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+#root {
+    width: 500px;
+    height: 500px;
+}
 /* TEMPORARY */
 .link {
-
     color: #3b5998;
     text-decoration: 'underline';
 }
