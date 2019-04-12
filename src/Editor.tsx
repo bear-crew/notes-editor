@@ -7,9 +7,9 @@ import Toolbar from './Toolbar/Toolbar';
 const imagePlugin = createImagePlugin();
 
 interface ILinkProps {
-	contentState: ContentState,
-	entityKey: string,
-	children: any
+	contentState: ContentState;
+	entityKey: string;
+	children: React.ReactChildren;
 }
 
 const Link = (props : ILinkProps) => {
@@ -36,7 +36,11 @@ function findLinkEntities(contentBlock : ContentBlock, callback : any, contentSt
 	);
 }
 
-class ReactEditor extends React.Component<any, any> {
+interface IState {
+	editorState: EditorState
+};
+
+class ReactEditor extends React.Component<any, IState> { // ASK: what to do with props type?
 	constructor(props: any) {
 		super(props);
 		const decorator = new CompositeDecorator([
@@ -54,13 +58,11 @@ class ReactEditor extends React.Component<any, any> {
 		return (
 			<div className='bear-editor' onDragOver={this.preventDragging} onDrag={this.preventDragging} onDragEnter={this.preventDragging} onDragStart={this.preventDragging} onDragLeave={this.preventDragging}>
 				<Editor
-					key='editor'
 					editorState={this.state.editorState}
 					onChange={this.onChange}
 					plugins={[imagePlugin]}
 				/>
 				<Toolbar
-					key='toolbar'
 					editorState={this.state.editorState}
 					onChange={this.onChange}
 				/>
@@ -72,9 +74,8 @@ class ReactEditor extends React.Component<any, any> {
 		this.setState({ editorState });
 	}
 
-	private preventDragging = (event: React.DragEvent<HTMLDivElement>): boolean => {
+	private preventDragging = (event: React.DragEvent<HTMLDivElement>) => {
 		event.preventDefault();
-		return false;
 	}
 }
 

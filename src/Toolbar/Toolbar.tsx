@@ -1,9 +1,25 @@
-import { AtomicBlockUtils, EditorState, getVisibleSelectionRect, RichUtils } from 'draft-js';
+import { AtomicBlockUtils, EditorState, getVisibleSelectionRect, RichUtils, SelectionState } from 'draft-js';
 import * as React from 'react';
 import './Toolbar.css';
 
-class Toolbar extends React.Component<any, any> {
-    public static getDerivedStateFromProps(nextProps: any, prevState: any) { // TODO: fix types
+interface IProps {
+    editorState: EditorState;
+    onChange: (editorState: EditorState) => void;
+};
+
+interface IState {
+    linkInput: string;
+    linkInputIsOpen: boolean;
+    pictureInput: string;
+    pictureInputIsOpen: boolean;
+    prevSelection: SelectionState;
+    sidebarIsOpen: boolean;
+    toolbarIsOpen: boolean;
+    visibleSelection: ClientRect;
+};
+
+class Toolbar extends React.Component<IProps, IState> {
+    public static getDerivedStateFromProps(nextProps: IProps, prevState: IState) {
         const selection = nextProps.editorState.getSelection();
         const nextState = {
             linkInputIsOpen: prevState.linkInputIsOpen,
@@ -14,7 +30,7 @@ class Toolbar extends React.Component<any, any> {
             visibleSelection: prevState.visibleSelection
         };
 
-        if ((selection !== prevState.prevSelection || selection.isCollapsed()) && prevState.linkInputIsOpen && selection.getHasFocus()) {
+        if ((selection !== prevState.prevSelection || selection.isCollapsed()) && prevState.linkInputIsOpen && selection.getHasFocus() || nextState.pictureInputIsOpen) {
             nextState.linkInputIsOpen = false;
         }
 
@@ -35,18 +51,32 @@ class Toolbar extends React.Component<any, any> {
         return nextState;
     }
 
-    constructor(props: any) {
+    private toolbarRef = React.createRef<HTMLDivElement>();
+    private linkInputRef = React.createRef<HTMLDivElement>();
+    private pictureInputRef = React.createRef<HTMLDivElement>();
+    private sidebarRef = React.createRef<HTMLDivElement>();
+
+    constructor(props: IProps) {
         super(props);
         this.state = {
-            linkInput: null,
+            linkInput: "",
             linkInputIsOpen: false,
-            pictureInput: null,
+            pictureInput: "",
             pictureInputIsOpen: false,
-            prevSelection: {},
+            prevSelection: new SelectionState,
             sidebarIsOpen: false,
             toolbarIsOpen: false,
-            visibleSelection: null
+            visibleSelection: getVisibleSelectionRect(window)
         };
+
+        this.getButtonStyle = this.getButtonStyle.bind(this);
+        this.postLink = this.postLink.bind(this);
+        this.insertImage = this.insertImage.bind(this);
+        this.setSidebarPosition = this.setSidebarPosition.bind(this);
+        this.setLinkInputPosition = this.setLinkInputPosition.bind(this);
+        this.setToolbarPosition = this.setToolbarPosition.bind(this);
+        this.getSidebarPosition = this.getSidebarPosition.bind(this);
+        this.getStyle = this.getStyle.bind(this);   
     }
 
     public componentDidUpdate() {
@@ -64,7 +94,6 @@ class Toolbar extends React.Component<any, any> {
     }
 
     public render() {
-        // console.log(convertToRaw(this.props.editorState.getCurrentContent()));
         const toolbarStyle = {
             left: 0,
             position: 'absolute',
@@ -89,7 +118,7 @@ class Toolbar extends React.Component<any, any> {
         } as React.CSSProperties;
 
         return [
-            this.state.toolbarIsOpen && <div className="toolbar" key="toolbar" style={toolbarStyle}>
+            this.state.toolbarIsOpen && <div ref={this.toolbarRef} className="toolbar" key="toolbar" style={toolbarStyle}>
                 <div className="toolbar-column">
                     <button type="button" className={this.getButtonStyle('bold')} onMouseDown={this.bold} />
                     <button type="button" className={this.getButtonStyle('ordered-list')} onMouseDown={this.ordList} />
@@ -108,34 +137,34 @@ class Toolbar extends React.Component<any, any> {
                 </div>
             </div>,
             
-            this.state.linkInputIsOpen && <div className="link-input-wrapper" key="link-input" style={linkInputStyle} >
+            this.state.linkInputIsOpen && <div ref={this.linkInputRef} className="link-input-wrapper" key="link-input" style={linkInputStyle} >
                 <input placeholder="Type your link here..." type="url" className="link-input" name="" id="link-input" onInput={this.urlLink} />
                 <button type='button' className='post-link' onClick={this.postLink}/>
                 <div className="gradient" />
             </div>,
 
-            this.state.sidebarIsOpen && <div className="sidebar" key="sidebar" style={sidebarStyle} id='sidebar'>
+            this.state.sidebarIsOpen && <div ref={this.sidebarRef} className="sidebar" key="sidebar" style={sidebarStyle} id='sidebar'>
                 <button type="button" className={this.state.pictureInputIsOpen ? "picture picture-pushed" : "picture"} onMouseDown={this.picture} />
             </div>,
 
-            this.state.pictureInputIsOpen && <div className="picture-input-wrapper" key="picture-input" style={pictureInputStyle}>
-                <input type="url" name="" className="picture-input" onInput={this.urlPicture} />
+            this.state.pictureInputIsOpen && <div ref={this.pictureInputRef} className="picture-input-wrapper" key="picture-input" style={pictureInputStyle}>
+                <input type="url" name="picture-input" className="picture-input" onInput={this.urlPicture} />
                 <button type='button' onClick={this.insertImage} className='picture-accept' />
                 <div className="gradient move-right" />
             </div>
         ];
     }
 
-    private getButtonStyle = (buttonType : string) : string => {
+    private getButtonStyle(buttonType : string) : string {
         const currentInlineStyle = this.props.editorState.getCurrentInlineStyle();
         const selection = this.props.editorState.getSelection();
         const currentBlockStyle = this.props.editorState
-        .getCurrentContent()
-        .getBlockForKey(selection.getStartKey())
-        .getType();
+                .getCurrentContent()
+                .getBlockForKey(selection.getStartKey())
+                .getType();
         switch (buttonType) {
             case 'bold': {
-                if( currentInlineStyle.has('BOLD') ) {
+                if (currentInlineStyle.has('BOLD')) {
                     return 'bold bold-active';
                 }
                 else {
@@ -143,7 +172,7 @@ class Toolbar extends React.Component<any, any> {
                 } 
             }
             case 'italic': {
-                if( currentInlineStyle.has('ITALIC') ) {
+                if (currentInlineStyle.has('ITALIC')) {
                     return 'italic italic-active';
                 }
                 else {
@@ -151,7 +180,7 @@ class Toolbar extends React.Component<any, any> {
                 } 
             }
             case 'h2': {
-                if( currentBlockStyle === 'header-two' ) {
+                if (currentBlockStyle === 'header-two') {
                     return 'h2 h2-active';
                 }
                 else {
@@ -159,7 +188,7 @@ class Toolbar extends React.Component<any, any> {
                 }
             }
             case 'h3': {
-                if( currentBlockStyle === 'header-three' ) {
+                if (currentBlockStyle === 'header-three') {
                     return 'h3 h3-active';
                 }
                 else {
@@ -167,7 +196,7 @@ class Toolbar extends React.Component<any, any> {
                 }
             }
             case 'blockquote': {
-                if( currentBlockStyle === 'blockquote' ) {
+                if (currentBlockStyle === 'blockquote') {
                     return 'blockquote blockquote-active';
                 }
                 else {
@@ -175,7 +204,7 @@ class Toolbar extends React.Component<any, any> {
                 }
             }
             case 'ordered-list': {
-                if( currentBlockStyle === 'ordered-list-item' ) {
+                if (currentBlockStyle === 'ordered-list-item') {
                     return 'ordered-list ordered-list-active';
                 }
                 else {
@@ -183,7 +212,7 @@ class Toolbar extends React.Component<any, any> {
                 }
             }
             case 'unordered-list': {
-                if( currentBlockStyle === 'unordered-list-item' ) {
+                if (currentBlockStyle === 'unordered-list-item') {
                     return 'unordered-list unordered-list-active';
                 }
                 else {
@@ -192,10 +221,9 @@ class Toolbar extends React.Component<any, any> {
             }
             default: return buttonType;
         }
-
     }
 
-    private postLink = (e : React.MouseEvent<HTMLButtonElement>) => {
+    private postLink(e : React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
         const linkUrl = this.state.linkInput;
         const editorState = this.props.editorState;
@@ -203,7 +231,7 @@ class Toolbar extends React.Component<any, any> {
         const contentStateWithEntity = contentState.createEntity(
             'LINK',
             'MUTABLE',
-            {url: linkUrl}
+            { url: linkUrl }
         );
         const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
         const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
@@ -215,7 +243,7 @@ class Toolbar extends React.Component<any, any> {
         );
     }
 
-    private insertImage = () => {
+    private insertImage() {
         const linkUrl = this.state.pictureInput;
         if (linkUrl) {
             const contentState = this.props.editorState.getCurrentContent();
@@ -231,27 +259,29 @@ class Toolbar extends React.Component<any, any> {
             );
     
             this.props.onChange(AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, ' '));
+            this.setState({
+                pictureInput: '',
+                pictureInputIsOpen: false
+            });
         }
     };
 
-    private setPictureInput = (sidebar: HTMLElement) => {
-        const pictureInput = document.getElementsByClassName('picture-input-wrapper')[0] as HTMLElement;
+    private setPictureInput(sidebar: HTMLElement) {
+        const pictureInput = this.pictureInputRef.current;
         const cornerOffset = {
             left: 12, // to adjust corner in right position
             top: 54 // height of bubble + 10
         };
 
         if (pictureInput && sidebar && sidebar.style.top && sidebar.style.left) {
-            const top = Number(sidebar.style.top.slice(0, -2)) + cornerOffset.top;
-            const left = Number(sidebar.style.left.slice(0, -2)) - cornerOffset.left;
-            pictureInput.style.top = `${top}px`;
-            pictureInput.style.left = `${left}px`;
+            pictureInput.style.top = `${parseFloat(sidebar.style.top) + cornerOffset.top}px`;
+            pictureInput.style.left = `${parseFloat(sidebar.style.left) - cornerOffset.left}px`;
         }
     }
 
-    private setSidebarPosition = () => {
+    private setSidebarPosition() {
         const sidebarStyle = this.getSidebarPosition();
-        const sidebarNode = document.getElementById('sidebar');
+        const sidebarNode = this.sidebarRef.current;
         if(sidebarNode) {
             if(this.state.pictureInputIsOpen) {
                 this.setPictureInput(sidebarNode);
@@ -260,63 +290,29 @@ class Toolbar extends React.Component<any, any> {
         }
     }
 
-    private setLinkInputPosition = () => {
-        const linkInputNodes = document.getElementsByClassName('link-input-wrapper') as HTMLCollectionOf<HTMLElement>;
+    private setLinkInputPosition() {
+        const linkInput = this.linkInputRef.current;
         const [style, className] = this.getStyle('link-bubble', 63, 263, this.state.visibleSelection);
-        linkInputNodes[0].style.top = `${style.top}px`;
-        linkInputNodes[0].style.left = `${style.left}px`;
 
-        if (className === '') {
-            linkInputNodes[0].className = 'link-input-wrapper';
-        }
-        else if (className === 'link-bubble-bottom-r') {
-            linkInputNodes[0].className = 'link-input-wrapper link-bubble-bottom-r';
-        }
-        else if (className === 'link-bubble-bottom-l') {
-            linkInputNodes[0].className = 'link-input-wrapper link-bubble-bottom-l';
-        }
-        else if (className === 'link-bubble-top') {
-            linkInputNodes[0].className = 'link-input-wrapper link-bubble-top';
-        }
-        else if (className === 'link-bubble-top-r') {
-            linkInputNodes[0].className = 'link-input-wrapper link-bubble-top-r';
-        }
-        else if (className === 'link-bubble-top-l') {
-            linkInputNodes[0].className = 'link-input-wrapper link-bubble-top-l';
+        if (linkInput) {
+            linkInput.style.top = `${style.top}px`;
+            linkInput.style.left = `${style.left}px`;
+            linkInput.className = 'link-input-wrapper ' + className;
         }
     } 
 
-    private setToolbarPosition = () => {
-        const toolbarNodes = document.getElementsByClassName('toolbar') as HTMLCollectionOf<HTMLElement>;
+    private setToolbarPosition() {
+        const toolbar = this.toolbarRef.current;
         const [style, className] = this.getStyle('bubble', 115, 193, getVisibleSelectionRect(window));
-        toolbarNodes[0].style.top = `${style.top}px`;
-        toolbarNodes[0].style.left = `${style.left}px`;
 
-        if (className === '') {
-            toolbarNodes[0].className = 'toolbar';
-        }
-        else if (className === 'bubble-bottom-r') {
-            toolbarNodes[0].className = 'toolbar bubble-bottom-r';
-        }
-        else if (className === 'bubble-bottom-l') {
-            toolbarNodes[0].className = 'toolbar bubble-bottom-l';
-        }
-        else if (className === 'bubble-top') {
-            toolbarNodes[0].className = 'toolbar bubble-top';
-        }
-        else if (className === 'bubble-top-r') {
-            toolbarNodes[0].className = 'toolbar bubble-top-r';
-        }
-        else if (className === 'bubble-top-l') {
-            toolbarNodes[0].className = 'toolbar bubble-top-l';
+        if (toolbar) {
+            toolbar.style.top = `${style.top}px`;
+            toolbar.style.left = `${style.left}px`;
+            toolbar.className = 'toolbar ' + className;
         }
     }
 
-    // private test = () => {
-    //     this.props.editorState.getCurrentInlineStyle();
-    // }
-
-    private getSidebarPosition = () => {
+    private getSidebarPosition() {
         let style = {} as React.CSSProperties;
         let selection;
 
@@ -327,15 +323,13 @@ class Toolbar extends React.Component<any, any> {
             selection = this.props.editorState.getSelection();
         }
         
-        const nodes = document.querySelectorAll(`[data-offset-key="${selection.anchorKey}-0-0"]`);
+        const node = document.querySelector(`[data-offset-key="${selection.getAnchorKey()}-0-0"]`);
         if (selection.getHasFocus()) {
             const editorElement = document.getElementsByClassName('DraftEditor-root')[0];
             const editrorRect = editorElement.getBoundingClientRect();
-            const parentNode = nodes[0] as Element;
-
+            const parentNode = node as Element;
             const buttonHeight = 42;
             const blockHeight = parentNode.getBoundingClientRect().height;
-            console.log(blockHeight);
             const y = parentNode.getBoundingClientRect().top - editrorRect.top - (buttonHeight - blockHeight)/2;
             style = {
                 top: y
@@ -350,7 +344,7 @@ class Toolbar extends React.Component<any, any> {
         }
     }
 
-    private getStyle = (key: string, height: number, width: number, selectRect: ClientRect): [React.CSSProperties, string] => {
+    private getStyle(key: string, height: number, width: number, selectRect: ClientRect): [React.CSSProperties, string] {
         const style = {
             left: 0,
             position: 'absolute',
@@ -378,10 +372,10 @@ class Toolbar extends React.Component<any, any> {
             if (position.left + width + editorRect.left > editorRect.right) { // toolbar moves right too much
                 if (editorRect.top + position.top + height > editorRect.bottom) { // right and down
                     position.top = selectRect.top - height - editorRect.top;
-                    className = key+'-top-r';
+                    className = key + '-top-r';
                 }
                 else {
-                    className = key+'-bottom-r';
+                    className = key + '-bottom-r';
                 }
                 position.left = (selectRect.right - selectRect.width/2) - (width - horizontalOffset) - editorRect.left;
             } 
@@ -389,17 +383,17 @@ class Toolbar extends React.Component<any, any> {
             else if (position.left < 0) { // toolbar moves left too much
                 if (editorRect.top + position.top + height > editorRect.bottom) { // left and down
                     position.top = selectRect.top - height - editorRect.top;
-                    className = key+'-top-l';
+                    className = key + '-top-l';
                 }
                 else {
-                    className = key+'-bottom-l';
+                    className = key + '-bottom-l';
                 }
                 position.left = (selectRect.left + selectRect.width/2 - horizontalOffset) - editorRect.left;
             } 
             
             else if (editorRect.top + position.top + height > editorRect.bottom) { // toolbar moves down too much
                 position.top = selectRect.top - height - editorRect.top;
-                className = key+'-top';
+                className = key + '-top';
             }
             style.left = position.left;
             style.top = position.top;

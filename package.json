@@ -1,6 +1,7 @@
 {
   "name": "bear-editor",
   "version": "1.0.0",
+  "homepage": "./",
   "private": false,
   "dependencies": {
     "@types/draft-js": "^0.10.28",
